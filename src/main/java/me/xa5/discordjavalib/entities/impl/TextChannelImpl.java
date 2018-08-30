@@ -1,0 +1,60 @@
+package me.xa5.discordjavalib.entities.impl;
+
+import me.xa5.discordjavalib.entities.ChannelCategory;
+import me.xa5.discordjavalib.entities.DiscordApi;
+import me.xa5.discordjavalib.entities.TextChannel;
+
+public class TextChannelImpl implements TextChannel {
+    private String topic;
+    private String lastMessageId;
+    private int position;
+    private ChannelCategory parentCategory;
+    private String id;
+    private String name;
+    private DiscordApi api;
+
+    public TextChannelImpl(DiscordApi api, String lastMessageId, int position, ChannelCategory parentCategory, String id, String name, String topic) {
+        this.api = api;
+        this.topic = topic;
+        this.lastMessageId = lastMessageId;
+        this.position = position;
+        this.parentCategory = parentCategory;
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public String getTopic() {
+        return topic;
+    }
+
+    @Override
+    public String getLastMessageId() {
+        return lastMessageId;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public ChannelCategory getParentCategory() {
+        return parentCategory;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public DiscordApi getApi() {
+        return api;
+    }
+}

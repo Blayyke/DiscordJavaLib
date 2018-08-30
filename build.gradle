@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+group 'me.xa5'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.neovisionaries:nv-websocket-client:2.5'
+    compile 'com.squareup.okhttp3:okhttp:3.11.0'
+    compile 'com.eclipsesource.minimal-json:minimal-json:0.9.5'
+}
