@@ -7,32 +7,61 @@ import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
 import okhttp3.OkHttpClient;
 
 public class DiscordApiBuilder {
-    private WebSocketFactory websocketFactory = new WebSocketFactory();
+    private WebSocketFactory webSocketFactory = new WebSocketFactory();
     private OkHttpClient httpClient = new OkHttpClient.Builder().build();
     private String token = null;
     private Game game = null;
 
+    /**
+     * Build the discord api client with your provided configuration.
+     *
+     * @return The newly-created {@link DiscordApi}, ready for login.
+     */
     public DiscordApi build() {
         if (token == null || token.isEmpty()) throw new RuntimeException("need to provide nonnull & non-empty token!");
 
-        return new DiscordApiImpl(websocketFactory, httpClient, token, game);
+        return new DiscordApiImpl(webSocketFactory, httpClient, token, game);
     }
 
+    /**
+     * Set the token of the bot you want to connect with. This is not optional.
+     *
+     * @param token The discord API token.
+     * @return The {@link DiscordApiBuilder}
+     */
     public DiscordApiBuilder setToken(String token) {
         this.token = token;
         return this;
     }
 
+    /**
+     * Optionally provide your own {@link OkHttpClient} to use for interfacing with the discord REST API.
+     *
+     * @param httpClient Your custom {@link OkHttpClient} to use for discord HTTP requests.
+     * @return The {@link DiscordApiBuilder}
+     */
     public DiscordApiBuilder setHttpClient(OkHttpClient httpClient) {
         this.httpClient = httpClient;
         return this;
     }
 
-    public DiscordApiBuilder setWebsocketFactory(WebSocketFactory websocketFactory) {
-        this.websocketFactory = websocketFactory;
+    /**
+     * Optionally provide your own {@link WebSocketFactory} to use for building the discord websocket client.
+     *
+     * @param webSocketFactory Your custom {@link WebSocketFactory} instance
+     * @return The {@link DiscordApiBuilder}
+     */
+    public DiscordApiBuilder setWebSocketFactory(WebSocketFactory webSocketFactory) {
+        this.webSocketFactory = webSocketFactory;
         return this;
     }
 
+    /**
+     * Optionally specify the game that the bot will have set upon startup.
+     *
+     * @param game The game to set
+     * @return The {@link DiscordApiBuilder}
+     */
     public DiscordApiBuilder setGame(Game game) {
         this.game = game;
         return this;
