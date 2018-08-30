@@ -22,6 +22,7 @@ public class DiscordApiImpl implements DiscordApi {
     private BotUser botAccount;
     private Map<String, GuildImpl> guildMap = new HashMap<>();
     private Map<String, UserImpl> userMap = new HashMap<>();
+    private boolean loggedIn = false;
 
     public DiscordApiImpl(WebSocketFactory websocketFactory, OkHttpClient httpClient, String token, Game game) {
         this.websocketFactory = websocketFactory;
@@ -31,7 +32,7 @@ public class DiscordApiImpl implements DiscordApi {
         this.wsClient = new WSClient(this);
     }
 
-    public void connect() throws IOException, WebSocketException {
+    private void connect() throws IOException, WebSocketException {
         wsClient.connect();
     }
 
@@ -94,5 +95,13 @@ public class DiscordApiImpl implements DiscordApi {
         String id = userObj.get("id").asString();
         if (!userMap.containsKey(id)) userMap.put(id, JsonFactory.userFromJson(this, userObj));
         return userMap.get(id);
+    }
+
+    @Override
+    public void login() throws IOException, WebSocketException {
+        if (loggedIn) throw new IllegalStateException("Already connected to discord!");
+
+        connect();
+        loggedIn = true;
     }
 }
