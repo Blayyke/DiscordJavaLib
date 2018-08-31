@@ -1,10 +1,11 @@
-package me.xa5.discordjavalib.handler;
+package me.xa5.discordjavalib.handler.role;
 
 import com.eclipsesource.json.JsonObject;
 import me.xa5.discordjavalib.WSClient;
 import me.xa5.discordjavalib.entities.DiscordApi;
 import me.xa5.discordjavalib.entities.impl.GuildImpl;
 import me.xa5.discordjavalib.entities.impl.RoleImpl;
+import me.xa5.discordjavalib.handler.WSEventHandler;
 import me.xa5.discordjavalib.util.JsonFactory;
 
 public class WSHandlerGuildRoleUpdate extends WSEventHandler {
