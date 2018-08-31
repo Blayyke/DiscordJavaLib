@@ -7,18 +7,12 @@ import com.eclipsesource.json.WriterConfig;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
-import me.xa5.discordjavalib.handler.WSEventHandler;
-import me.xa5.discordjavalib.handler.WSHandlerGuildCreate;
-import me.xa5.discordjavalib.handler.WSHandlerGuildMembersChunk;
-import me.xa5.discordjavalib.handler.WSHandlerReady;
+import me.xa5.discordjavalib.handler.*;
 import me.xa5.discordjavalib.util.JsonFactory;
 import okhttp3.Response;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WSClient {
@@ -39,6 +33,7 @@ public class WSClient {
         registerWSHandler(new WSHandlerReady(api));
         registerWSHandler(new WSHandlerGuildMembersChunk(api));
         registerWSHandler(new WSHandlerGuildCreate(api));
+        registerWSHandler(new WSHandlerTypingStart(api));
     }
 
     private void registerWSHandler(WSEventHandler handler) {
@@ -49,7 +44,7 @@ public class WSClient {
     public void connect() throws IOException, WebSocketException {
         http = new DJLHttp(api);
 
-        client = api.getWebsocketFactory().createSocket(getWebsocketUrl());
+        client = api.getWebsocketFactory().createSocket(getWebSocketUrl());
         client.addListener(new WSListener(this, api));
         client.addHeader("Authorization", "Bot " + api.getToken());
         client.connect();
@@ -59,7 +54,7 @@ public class WSClient {
         return api;
     }
 
-    private String getWebsocketUrl() throws IOException {
+    private String getWebSocketUrl() throws IOException {
         if (this.wsUrl == null) {
             Response response = http.getBlocking(DiscordEndpoint.GET_GATEWAY);
             if (response.body() == null)
@@ -108,7 +103,7 @@ public class WSClient {
         thread.start();
     }
 
-    void identify() {
+    private void identify() {
         JsonObject payload = Json.object()
                 .set("op", 2)
                 .set("d", Json.object()
