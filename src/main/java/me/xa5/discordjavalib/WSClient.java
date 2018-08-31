@@ -80,7 +80,7 @@ public class WSClient {
         if (wsEventHandler == null) {
             api.getLogger().warn("No handler registered for event " + eventType.toUpperCase());
             api.getLogger().warn("^ DATA:: " + data.toString(WriterConfig.PRETTY_PRINT));
-            throw new NotImplementedException();
+            return;
         }
 
         wsEventHandler.handle(this, data);
