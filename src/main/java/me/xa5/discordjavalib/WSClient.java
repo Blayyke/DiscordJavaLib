@@ -8,6 +8,9 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
 import me.xa5.discordjavalib.handler.*;
+import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleCreate;
+import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleDelete;
+import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleUpdate;
 import me.xa5.discordjavalib.util.JsonFactory;
 import okhttp3.Response;
 
