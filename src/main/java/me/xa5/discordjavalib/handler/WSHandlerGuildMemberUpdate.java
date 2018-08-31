@@ -34,6 +34,7 @@ public class WSHandlerGuildMemberUpdate extends WSEventHandler {
         data.get("roles").asArray().forEach(value -> {
             roles.add(guild.getRole(value.asString()));
         });
+        member.setRoles(roles);
 
         //todo dispatch event; provide old&new data
     }

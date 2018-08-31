@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MemberImpl implements Member {
     private final LocalDateTime joinDate;
-    private final List<Role> roles;
+    private List<Role> roles;
     private final User user;
     private final boolean isDeafened;
     private final boolean isMuted;
@@ -63,5 +63,13 @@ public class MemberImpl implements Member {
     @Override
     public boolean hasNickname() {
         return getNickname() != null;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
