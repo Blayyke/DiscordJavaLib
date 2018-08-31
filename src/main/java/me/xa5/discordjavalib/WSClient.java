@@ -8,6 +8,7 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
 import me.xa5.discordjavalib.handler.*;
+import me.xa5.discordjavalib.handler.message.WSHandlerMessageDelete;
 import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleCreate;
 import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleDelete;
 import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleUpdate;
@@ -36,6 +37,7 @@ public class WSClient {
         registerWSHandler(new WSHandlerReady(api));
         registerWSHandler(new WSHandlerGuildCreate(api));
         registerWSHandler(new WSHandlerTypingStart(api));
+        registerWSHandler(new WSHandlerMessageDelete(api));
         registerWSHandler(new WSHandlerGuildRoleCreate(api));
         registerWSHandler(new WSHandlerGuildRoleDelete(api));
         registerWSHandler(new WSHandlerGuildRoleUpdate(api));
