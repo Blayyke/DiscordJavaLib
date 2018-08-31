@@ -35,6 +35,7 @@ public class WSClient {
         registerWSHandler(new WSHandlerTypingStart(api));
         registerWSHandler(new WSHandlerGuildRoleCreate(api));
         registerWSHandler(new WSHandlerGuildRoleDelete(api));
+        registerWSHandler(new WSHandlerGuildRoleUpdate(api));
         registerWSHandler(new WSHandlerGuildMembersChunk(api));
         registerWSHandler(new WSHandlerGuildMemberUpdate(api));
     }
