@@ -17,7 +17,7 @@ public class WSListener extends WebSocketAdapter {
     private WSClient wsClient;
     private DiscordApi api;
 
-    public WSListener(WSClient wsClient, DiscordApi api) {
+    WSListener(WSClient wsClient, DiscordApi api) {
         this.wsClient = wsClient;
         this.api = api;
     }
@@ -41,7 +41,7 @@ public class WSListener extends WebSocketAdapter {
     }
 
     @Override
-    public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+    public void onTextFrame(WebSocket websocket, WebSocketFrame frame) {
         onWebSocketMessage(frame.getPayloadText());
     }
 
