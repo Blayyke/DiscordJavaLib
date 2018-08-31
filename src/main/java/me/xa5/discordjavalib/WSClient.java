@@ -8,6 +8,8 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
 import me.xa5.discordjavalib.handler.*;
+import me.xa5.discordjavalib.handler.channel.WSHandlerChannelCreate;
+import me.xa5.discordjavalib.handler.channel.WSHandlerChannelDelete;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageDelete;
 import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleCreate;
 import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleDelete;
@@ -38,6 +40,8 @@ public class WSClient {
         registerWSHandler(new WSHandlerReady(api));
         registerWSHandler(new WSHandlerGuildCreate(api));
         registerWSHandler(new WSHandlerTypingStart(api));
+        registerWSHandler(new WSHandlerChannelCreate(api));
+        registerWSHandler(new WSHandlerChannelDelete(api));
         registerWSHandler(new WSHandlerMessageDelete(api));
         registerWSHandler(new WSHandlerPresenceUpdate(api));
         registerWSHandler(new WSHandlerGuildRoleCreate(api));
@@ -100,7 +104,7 @@ public class WSClient {
         identify();
         long interval = data.get("heartbeat_interval").asLong();
 
-        Thread thread = new Thread(DJLConstants.NAME + "-heartbeat-thread") {
+        Thread thread = new Thread(DJLConstants.NAME + " Heartbeat-Thread") {
             @Override
             public void run() {
                 try {
