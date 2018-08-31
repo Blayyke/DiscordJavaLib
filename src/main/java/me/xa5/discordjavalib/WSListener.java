@@ -66,13 +66,11 @@ public class WSListener extends WebSocketAdapter {
         try {
             int op = object.get("op").asInt();
             String eventType = null;
-            long sequence = -1;
 
             if (!object.get("t").isNull()) eventType = object.get("t").asString();
-            if (!object.get("s").isNull()) sequence = object.get("s").asLong();
+            if (object.get("s") != null && !object.get("s").isNull()) wsClient.setSequence(object.get("s").asLong());
 
             JsonObject data = object.get("d").isNull() ? null : object.get("d").asObject();
-            wsClient.setSequence(sequence);
 
             switch (op) {
                 case 0:

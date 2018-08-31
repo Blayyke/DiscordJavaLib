@@ -27,7 +27,7 @@ public class WSClient {
     private DJLHttp http;
 
     private String wsUrl;
-    private long sequence;
+    private long sequence = -1;
     private boolean connected;
     private long heartbeatSendTime;
     private Map<String, WSEventHandler> eventHandlers = new HashMap<>();
