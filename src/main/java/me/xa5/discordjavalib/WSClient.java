@@ -31,9 +31,10 @@ public class WSClient {
         this.api = api;
 
         registerWSHandler(new WSHandlerReady(api));
-        registerWSHandler(new WSHandlerGuildMembersChunk(api));
         registerWSHandler(new WSHandlerGuildCreate(api));
         registerWSHandler(new WSHandlerTypingStart(api));
+        registerWSHandler(new WSHandlerGuildMembersChunk(api));
+        registerWSHandler(new WSHandlerGuildMemberUpdate(api));
     }
 
     private void registerWSHandler(WSEventHandler handler) {
