@@ -14,7 +14,7 @@ public class WSHandlerGuildRoleCreate extends WSEventHandler {
 
     @Override
     public String getInternalEventName() {
-        return null;
+        return "guild_role_create";
     }
 
     @Override
