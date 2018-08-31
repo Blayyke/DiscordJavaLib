@@ -4,6 +4,7 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.WriterConfig;
 import com.neovisionaries.ws.client.*;
+import me.xa5.discordjavalib.entities.DiscordApi;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.ByteArrayInputStream;
@@ -14,9 +15,11 @@ import java.util.zip.InflaterInputStream;
 
 public class WSListener implements WebSocketListener {
     private WSClient wsClient;
+    private DiscordApi api;
 
-    public WSListener(WSClient wsClient) {
+    public WSListener(WSClient wsClient, DiscordApi api) {
         this.wsClient = wsClient;
+        this.api = api;
     }
 
     @Override
@@ -26,6 +29,7 @@ public class WSListener implements WebSocketListener {
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         wsClient.setConnected(true);
+        api.getLogger().info("WebSocket connection established! (URL: " + websocket.getURI().toString() + ")");
     }
 
     @Override
@@ -76,9 +80,9 @@ public class WSListener implements WebSocketListener {
     }
 
     private void onWebsocketMessage(WebSocket websocket, String message) {
-        try {
-            JsonObject object = Json.parse(message).asObject();
+        JsonObject object = Json.parse(message).asObject();
 
+        try {
             int op = object.get("op").asInt();
             String eventType = null;
             long sequence = -1;
@@ -118,8 +122,10 @@ public class WSListener implements WebSocketListener {
                     throw new RuntimeException("Unknown OpCode!");
             }
         } catch (Exception e) {
-            System.out.println(message);
+            api.getLogger().warn("Uncaught exception on websocket message handling: " + e.getMessage());
             e.printStackTrace();
+
+            api.getLogger().warn("JSON involved: \n" + object.toString(WriterConfig.PRETTY_PRINT));
         }
     }
 

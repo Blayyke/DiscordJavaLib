@@ -24,6 +24,8 @@ public class GuildImpl implements Guild {
     private Map<String, RoleImpl> roleMap = new HashMap<>();
     private Map<String, EmoteImpl> emoteMap = new HashMap<>();
     private Map<String, MemberImpl> memberMap = new HashMap<>();
+    private Map<String, Presence> presenceMap = new HashMap<>();
+    private Map<String, VoiceStateImpl> voiceStateMap = new HashMap<>();
     private Map<String, TextChannelImpl> textChannelMap = new HashMap<>();
     private Map<String, VoiceChannelImpl> voiceChannelMap = new HashMap<>();
     private Map<String, ChannelCategoryImpl> channelCategoryMap = new HashMap<>();
@@ -255,5 +257,41 @@ public class GuildImpl implements Guild {
     @Override
     public Member getMember(String id) {
         return memberMap.get(id);
+    }
+
+    @Override
+    public Member getMember(User user) {
+        if (user == null) return null;
+        return memberMap.get(user.getId());
+    }
+
+    public void setPresenceMap(Map<String, Presence> presenceMap) {
+        this.presenceMap = presenceMap;
+    }
+
+    @Override
+    public Presence getPresence(Member member) {
+        if (member == null) return null;
+        return getPresence(member.getUser().getId());
+    }
+
+    @Override
+    public Presence getPresence(String id) {
+        return presenceMap.get(id);
+    }
+
+    public void setVoiceStateMap(Map<String, VoiceStateImpl> voiceStateMap) {
+        this.voiceStateMap = voiceStateMap;
+    }
+
+    @Override
+    public VoiceState getVoiceState(Member member) {
+        if (member == null) return null;
+        return getVoiceState(member.getUser().getId());
+    }
+
+    @Override
+    public VoiceState getVoiceState(String id) {
+        return voiceStateMap.get(id);
     }
 }

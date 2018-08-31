@@ -2,17 +2,15 @@ package me.xa5.discordjavalib.handler;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.WriterConfig;
 import me.xa5.discordjavalib.WSClient;
-import me.xa5.discordjavalib.entities.DiscordApi;
-import me.xa5.discordjavalib.entities.ExplicitContentFilterLevel;
-import me.xa5.discordjavalib.entities.Game;
-import me.xa5.discordjavalib.entities.Icon;
+import me.xa5.discordjavalib.entities.*;
 import me.xa5.discordjavalib.entities.impl.*;
 import me.xa5.discordjavalib.enums.*;
 import me.xa5.discordjavalib.util.DJLUtil;
 import me.xa5.discordjavalib.util.JsonFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class WSHandlerGuildCreate extends WSEventHandler {
     public WSHandlerGuildCreate(DiscordApi api) {
@@ -26,9 +24,6 @@ public class WSHandlerGuildCreate extends WSEventHandler {
 
     @Override
     public void handle(WSClient client, JsonObject data) {
-        System.err.println("GUILD CREATE::");
-//        System.out.println(data.toString(WriterConfig.PRETTY_PRINT));
-
         boolean unavailable = data.get("unavailable").asBoolean();
         String id = data.get("id").asString();
         GuildImpl guild = client.getApi().getOrCreateGuild(id, unavailable);
@@ -82,34 +77,32 @@ public class WSHandlerGuildCreate extends WSEventHandler {
         guild.setName(data.get("name").asString());
         guild.setJoinDate(DJLUtil.parseDate(data.get("joined_at").asString()));
 
+        getApi().getLogger().debug("Got GUILD_CREATE for guild " + guild.getName() + ".");
 
         // Handle members
-        JsonArray voiceStates = data.get("voice_states").asArray();
-        JsonArray presences = data.get("presences").asArray();
 
+        JsonArray voiceStates = data.get("voice_states").asArray();
+        Map<String, VoiceStateImpl> voiceStateMap = new HashMap<>();
+        voiceStates.forEach(value -> {
+            VoiceStateImpl voiceState = JsonFactory.voiceStateFromJson(value.asObject());
+            voiceStateMap.put(voiceState.getUserId(), voiceState);
+        });
+        guild.setVoiceStateMap(voiceStateMap);
+
+        JsonArray presences = data.get("presences").asArray();
+        Map<String, Presence> presenceMap = new HashMap<>();
+        presences.forEach(value -> {
+            Presence presence = JsonFactory.presenceFromJson(getApi(), value.asObject());
+            presenceMap.put(presence.getUserId(), presence);
+        });
+        guild.setPresenceMap(presenceMap);
 
         int memberCount = data.get("member_count").asInt();
         JsonArray members = data.get("members").asArray();
-
         if (memberCount > members.size()) {
-            System.err.println("HANDLE CHUNK/SYNC MEMBERS");
-            throw new NotImplementedException();
+            client.sendGuildSync(guild.getId());
+            return;
         }
-
-        System.out.println(voiceStates.toString());
-
-        presences.forEach(value -> {
-            JsonObject presenceObj = value.asObject();
-
-            String userId = presenceObj.get("user").asObject().get("id").asString();
-            OnlineStatus.fromKey(presenceObj.get("status").asString());
-            System.err.println(presenceObj.toString(WriterConfig.PRETTY_PRINT));
-            Game game = JsonFactory.gameFromJson(getApi(), presenceObj
-                    .get("game")
-                    .asObject());
-            JsonArray activities = presenceObj.get("activities").asArray();
-
-        });
 
         members.forEach(value -> {
             JsonObject memberObj = value.asObject();

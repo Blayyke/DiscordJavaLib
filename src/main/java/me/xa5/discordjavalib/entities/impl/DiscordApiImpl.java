@@ -3,9 +3,11 @@ package me.xa5.discordjavalib.entities.impl;
 import com.eclipsesource.json.JsonObject;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
+import me.xa5.discordjavalib.DJLConstants;
 import me.xa5.discordjavalib.WSClient;
 import me.xa5.discordjavalib.entities.*;
 import me.xa5.discordjavalib.util.JsonFactory;
+import me.xa5.discordjavalib.util.Logger;
 import okhttp3.OkHttpClient;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -23,6 +25,7 @@ public class DiscordApiImpl implements DiscordApi {
     private Map<String, GuildImpl> guildMap = new HashMap<>();
     private Map<String, UserImpl> userMap = new HashMap<>();
     private boolean loggedIn = false;
+    private Logger logger = Logger.create(DJLConstants.NAME);
 
     public DiscordApiImpl(WebSocketFactory websocketFactory, OkHttpClient httpClient, String token, Game game) {
         this.websocketFactory = websocketFactory;
@@ -100,8 +103,19 @@ public class DiscordApiImpl implements DiscordApi {
     @Override
     public void login() throws IOException, WebSocketException {
         if (loggedIn) throw new IllegalStateException("Already connected to discord!");
+        getLogger().info("Attempting login...");
 
         connect();
         loggedIn = true;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
+
+    @Override
+    public Guild getGuild(String id) {
+        return guildMap.get(id);
     }
 }

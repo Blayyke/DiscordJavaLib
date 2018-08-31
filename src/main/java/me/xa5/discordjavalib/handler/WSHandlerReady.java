@@ -27,11 +27,10 @@ public class WSHandlerReady extends WSEventHandler {
         client.setSessionId(data.get("session_id").asString());
 
         JsonArray guilds = data.get("guilds").asArray();
-        guilds.forEach(obj -> {
-            JsonObject guildObj = obj.asObject();
+        for (int i = 0; i < guilds.size(); i++) {
+            JsonObject guildObj = guilds.get(i).asObject();
             GuildImpl guild = new GuildImpl(getApi(), guildObj.get("unavailable").asBoolean(), guildObj.get("id").asString());
-
             client.getApi().getGuildMap().put(guild.getId(), guild);
-        });
+        }
     }
 }

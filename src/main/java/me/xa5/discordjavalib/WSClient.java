@@ -9,15 +9,17 @@ import com.neovisionaries.ws.client.WebSocketException;
 import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
 import me.xa5.discordjavalib.handler.WSEventHandler;
 import me.xa5.discordjavalib.handler.WSHandlerGuildCreate;
+import me.xa5.discordjavalib.handler.WSHandlerGuildMembersChunk;
 import me.xa5.discordjavalib.handler.WSHandlerReady;
 import me.xa5.discordjavalib.util.JsonFactory;
 import okhttp3.Response;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class WSClient {
     private WebSocket client;
@@ -35,6 +37,7 @@ public class WSClient {
         this.api = api;
 
         registerWSHandler(new WSHandlerReady(api));
+        registerWSHandler(new WSHandlerGuildMembersChunk(api));
         registerWSHandler(new WSHandlerGuildCreate(api));
     }
 
@@ -47,7 +50,7 @@ public class WSClient {
         http = new DJLHttp(api);
 
         client = api.getWebsocketFactory().createSocket(getWebsocketUrl());
-        client.addListener(new WSListener(this));
+        client.addListener(new WSListener(this, api));
         client.addHeader("Authorization", "Bot " + api.getToken());
         client.connect();
     }
@@ -72,11 +75,11 @@ public class WSClient {
     }
 
     public void handleEvent(String eventType, JsonObject data) {
-        System.out.println("RECEIVED EVENT::");
+        api.getLogger().debug("Received WS event (" + eventType + ").");
         WSEventHandler wsEventHandler = eventHandlers.get(eventType.toLowerCase());
         if (wsEventHandler == null) {
-            System.err.println("No handler registered for event " + eventType.toUpperCase());
-            System.err.println("DATA:: " + data.toString(WriterConfig.PRETTY_PRINT));
+            api.getLogger().warn("No handler registered for event " + eventType.toUpperCase());
+            api.getLogger().warn("^ DATA:: " + data.toString(WriterConfig.PRETTY_PRINT));
             throw new NotImplementedException();
         }
 
@@ -106,39 +109,35 @@ public class WSClient {
     }
 
     void identify() {
-        try {
-            JsonObject payload = Json.object()
-                    .set("op", 2)
-                    .set("d", Json.object()
-                            .set("token", api.getToken())
-                            .set("compress", true)
-                            .set("properties", Json.object()
-                                    .set("$os", System.getProperty("os.name"))
-                                    .set("$device", DJLConstants.NAME)
-                                    .set("$browser", DJLConstants.NAME))
-                            .set("presence", Json.object()
-                                    .set("status", "dnd")
-                                    .set("afk", false)));
+        JsonObject payload = Json.object()
+                .set("op", 2)
+                .set("d", Json.object()
+                        .set("token", api.getToken())
+                        .set("compress", true)
+                        .set("properties", Json.object()
+                                .set("$os", System.getProperty("os.name"))
+                                .set("$device", DJLConstants.NAME)
+                                .set("$browser", DJLConstants.NAME))
+                        .set("presence", Json.object()
+                                .set("status", "dnd")
+                                .set("afk", false)));
 
-            if (api.getGame() != null)
-                payload.set("game", JsonFactory.from(api.getGame()));
+        if (api.getGame() != null)
+            payload.set("game", JsonFactory.from(api.getGame()));
 
-            send(payload);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Sent identify!");
+        send(payload);
+        api.getLogger().debug("Sent IDENTIFY(op:2).");
     }
 
     private void send(JsonObject payload) {
         client.sendText(payload.toString());
-//        System.out.println("Sent text " + payload.toString(WriterConfig.PRETTY_PRINT));
+        api.getLogger().trace("Sent WS message: " + payload);
     }
 
     void sendHeartbeat() {
         send(Json.object().set("op", 1).set("d", sequence));
         heartbeatSendTime = System.currentTimeMillis();
-        System.out.println("sent heartbeat!");
+        api.getLogger().trace("Sent heartbeat.");
     }
 
     public void setConnected(boolean connected) {
@@ -151,5 +150,19 @@ public class WSClient {
 
     public void setSessionId(String id) {
         this.sessionId = id;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void sendGuildSync(String id) {
+        api.getLogger().debug("Sending guild sync for " + id + '.');
+        send(Json.object()
+                .add("op", 8)
+                .add("d", Json.object()
+                        .add("guild_id", id)
+                        .add("query", "")
+                        .add("limit", 0)));
     }
 }

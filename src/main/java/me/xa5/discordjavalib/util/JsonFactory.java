@@ -6,6 +6,7 @@ import com.eclipsesource.json.JsonObject;
 import me.xa5.discordjavalib.entities.*;
 import me.xa5.discordjavalib.entities.impl.*;
 import me.xa5.discordjavalib.enums.GameType;
+import me.xa5.discordjavalib.enums.OnlineStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class JsonFactory {
         LocalDateTime joinDate = DJLUtil.parseDate(obj.get("joined_at").asString());
         boolean isDeafened = obj.get("deaf").asBoolean();
         boolean isMuted = obj.get("mute").asBoolean();
-        String nickname = obj.get("nick") == null ? null : obj.get("nick").asString();
+        String nickname = obj.get("nick") == null || obj.get("nick").isNull() ? null : obj.get("nick").asString();
 
         JsonArray roleArray = obj.get("roles").asArray();
         List<Role> roles = new ArrayList<>();
@@ -101,5 +102,28 @@ public class JsonFactory {
         return new Game(
                 GameType.fromKey(game.get("type").asInt()),
                 game.get("name").asString());
+    }
+
+    public static VoiceStateImpl voiceStateFromJson(JsonObject state) {
+        String userId = state.get("user_id").asString();
+        boolean suppressed = state.get("suppress").asBoolean();
+//            session_id
+        boolean selfVideo = state.get("self_video").asBoolean();
+        boolean selfMute = state.get("self_mute").asBoolean();
+        boolean selfDeaf = state.get("self_deaf").asBoolean();
+
+        boolean serverMuted = state.get("mute").asBoolean();
+        boolean serverDeafened = state.get("deaf").asBoolean();
+
+        return new VoiceStateImpl(userId, suppressed, selfVideo, selfMute, selfDeaf, serverMuted, serverDeafened);
+    }
+
+    public static Presence presenceFromJson(DiscordApi api, JsonObject presence) {
+        String userId = presence.get("user").asObject().get("id").asString();
+        OnlineStatus status = OnlineStatus.fromKey(presence.get("status").asString());
+        Game game = null;
+        if (!presence.get("game").isNull())
+            game = JsonFactory.gameFromJson(api, presence.get("game").asObject());
+        return new Presence(userId, status, game);
     }
 }

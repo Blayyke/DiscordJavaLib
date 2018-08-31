@@ -50,4 +50,14 @@ public interface Guild extends NameHolder, IdHolder, DJLEntity {
     Member getOwner();
 
     Member getMember(String id);
+
+    Member getMember(User user);
+
+    Presence getPresence(Member member);
+
+    Presence getPresence(String id);
+
+    VoiceState getVoiceState(Member member);
+
+    VoiceState getVoiceState(String id);
 }
