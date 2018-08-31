@@ -294,4 +294,8 @@ public class GuildImpl implements Guild {
     public VoiceState getVoiceState(String id) {
         return voiceStateMap.get(id);
     }
+
+    public Map<String, Presence> getPresenceMap() {
+        return presenceMap;
+    }
 }

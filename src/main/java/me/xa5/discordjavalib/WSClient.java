@@ -39,6 +39,7 @@ public class WSClient {
         registerWSHandler(new WSHandlerGuildCreate(api));
         registerWSHandler(new WSHandlerTypingStart(api));
         registerWSHandler(new WSHandlerMessageDelete(api));
+        registerWSHandler(new WSHandlerPresenceUpdate(api));
         registerWSHandler(new WSHandlerGuildRoleCreate(api));
         registerWSHandler(new WSHandlerGuildRoleDelete(api));
         registerWSHandler(new WSHandlerGuildRoleUpdate(api));
@@ -140,7 +141,7 @@ public class WSClient {
 
     private void send(JsonObject payload) {
         client.sendText(payload.toString());
-        api.getLogger().trace("Sent WS message: " + payload);
+        api.getLogger().trace("Sent WS message: " + payload.toString().replace(api.getToken(), "{TOKEN REDACTED}"));
     }
 
     void sendHeartbeat() {
