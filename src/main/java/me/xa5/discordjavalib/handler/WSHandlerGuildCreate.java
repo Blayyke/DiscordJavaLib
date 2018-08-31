@@ -77,8 +77,6 @@ public class WSHandlerGuildCreate extends WSEventHandler {
         guild.setName(data.get("name").asString());
         guild.setJoinDate(DJLUtil.parseDate(data.get("joined_at").asString()));
 
-        getApi().getLogger().debug("Got GUILD_CREATE for guild " + guild.getName() + ".");
-
         // Handle members
 
         JsonArray voiceStates = data.get("voice_states").asArray();
