@@ -61,7 +61,7 @@ public class WSListener implements WebSocketListener {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        onWebsocketMessage(websocket, frame.getPayloadText());
+        onWebsocketMessage(frame.getPayloadText());
     }
 
     @Override
@@ -76,10 +76,10 @@ public class WSListener implements WebSocketListener {
             result.append(new String(Arrays.copyOf(buf, rlen)));
         }
 
-        onWebsocketMessage(websocket, result.toString());
+        onWebsocketMessage(result.toString());
     }
 
-    private void onWebsocketMessage(WebSocket websocket, String message) {
+    private void onWebsocketMessage(String message) {
         JsonObject object = Json.parse(message).asObject();
 
         try {
