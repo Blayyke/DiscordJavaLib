@@ -6,7 +6,8 @@ import me.xa5.discordjavalib.entities.Role;
 import java.awt.*;
 
 public class RoleImpl implements Role {
-    private String id;
+    private final DiscordApi api;
+    private final String id;
     private String name;
     private Color color;
     private int position;
@@ -14,7 +15,6 @@ public class RoleImpl implements Role {
     private boolean mentionable;
     private boolean managed;
     private boolean hoisted;
-    private DiscordApi api;
 
     public RoleImpl(DiscordApi api, String name, Color color, int position, long rawPermissions, boolean mentionable, boolean managed, boolean hoisted, String id) {
         this.api = api;
@@ -76,5 +76,33 @@ public class RoleImpl implements Role {
     @Override
     public DiscordApi getApi() {
         return api;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setManaged(boolean managed) {
+        this.managed = managed;
+    }
+
+    public void setHoisted(boolean hoisted) {
+        this.hoisted = hoisted;
+    }
+
+    public void setMentionable(boolean mentionable) {
+        this.mentionable = mentionable;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setRawPermissions(long rawPermissions) {
+        this.rawPermissions = rawPermissions;
     }
 }
