@@ -12,6 +12,7 @@ import me.xa5.discordjavalib.handler.channel.WSHandlerChannelCreate;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelDelete;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageCreate;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageDelete;
+import me.xa5.discordjavalib.handler.message.WSHandlerMessageUpdate;
 import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleCreate;
 import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleDelete;
 import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleUpdate;
@@ -47,6 +48,7 @@ public class WSClient {
 
         registerWSHandler(new WSHandlerMessageDelete(api));
         registerWSHandler(new WSHandlerMessageCreate(api));
+        registerWSHandler(new WSHandlerMessageUpdate(api));
         registerWSHandler(new WSHandlerTypingStart(api));
 
         registerWSHandler(new WSHandlerGuildRoleCreate(api));

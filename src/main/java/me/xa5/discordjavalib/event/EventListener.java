@@ -8,6 +8,7 @@ import me.xa5.discordjavalib.event.guild.member.EventMemberUpdate;
 import me.xa5.discordjavalib.event.guild.member.EventPresenceUpdate;
 import me.xa5.discordjavalib.event.guild.message.EventMessageCreate;
 import me.xa5.discordjavalib.event.guild.message.EventMessageDelete;
+import me.xa5.discordjavalib.event.guild.message.EventMessageUpdate;
 import me.xa5.discordjavalib.event.guild.role.EventRoleCreate;
 import me.xa5.discordjavalib.event.guild.role.EventRoleDelete;
 import me.xa5.discordjavalib.event.guild.role.EventRoleUpdate;
@@ -34,14 +35,22 @@ public class EventListener {
         if (event instanceof EventTextChannelCreate) onTextChannelCreate((EventTextChannelCreate) event);
         if (event instanceof EventTextChannelDelete) onTextChannelDelete((EventTextChannelDelete) event);
 
+        if (event instanceof MessageEvent) onMessageEvent((MessageEvent) event);
         if (event instanceof EventMessageCreate) onMessageCreate((EventMessageCreate) event);
         if (event instanceof EventMessageDelete) onMessageDelete((EventMessageDelete) event);
+        if (event instanceof EventMemberUpdate) onMessageUpdate((EventMessageUpdate) event);
     }
 
-    private void onMessageDelete(EventMessageDelete event) {
+    public void onMessageEvent(MessageEvent event) {
     }
 
-    private void onMessageCreate(EventMessageCreate event) {
+    public void onMessageUpdate(EventMessageUpdate event) {
+    }
+
+    public void onMessageDelete(EventMessageDelete event) {
+    }
+
+    public void onMessageCreate(EventMessageCreate event) {
     }
 
     public void onTextChannelDelete(EventTextChannelDelete event) {
