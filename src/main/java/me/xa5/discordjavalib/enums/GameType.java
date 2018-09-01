@@ -3,7 +3,7 @@ package me.xa5.discordjavalib.enums;
 import java.util.Arrays;
 
 public enum GameType {
-    PLAYING(0), STREAMING(1);
+    PLAYING(0), STREAMING(1), LISTENING(2);
 
     private int key;
 
