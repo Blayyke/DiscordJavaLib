@@ -39,6 +39,8 @@ public interface Message extends DJLEntity, IdHolder {
 
     List<Attachment> getAttachments();
 
+    List<Embed> getEmbeds();
+
     //todo List<Attachment> getAttachments();
 
     //todo List<Embed> getEmbeds();

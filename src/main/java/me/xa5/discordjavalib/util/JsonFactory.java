@@ -3,7 +3,6 @@ package me.xa5.discordjavalib.util;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.WriterConfig;
 import me.xa5.discordjavalib.entities.*;
 import me.xa5.discordjavalib.entities.impl.*;
 import me.xa5.discordjavalib.enums.GameType;
@@ -131,7 +130,6 @@ public class JsonFactory {
     }
 
     public static MessageImpl messageFromJson(DiscordApi api, JsonObject message) {
-        System.out.println(message.toString(WriterConfig.PRETTY_PRINT));
         //todo support DMs
         String id = message.get("id").asString();
         TextChannel channel = api.getTextChannel(message.get("channel_id").asString());
@@ -166,7 +164,52 @@ public class JsonFactory {
             attachments.add(attachmentFromJson(api, obj));
         });
 
-        return new MessageImpl(api, id, channel, author, guild, editTimestamp, timestamp, webhookId, content, mentionsEveryone, pinned, tts, mentionedUsers, mentionedRoles, attachments);
+        List<Embed> embeds = new ArrayList<>();
+        JsonArray embedArray = message.get("embeds").asArray();
+        embedArray.forEach(value -> {
+            JsonObject obj = value.asObject();
+            embeds.add(embedFromJson(obj));
+        });
+
+        return new MessageImpl(api, id, channel, author, guild, editTimestamp, timestamp, webhookId, content, mentionsEveryone, pinned, tts, mentionedUsers, mentionedRoles, attachments, embeds);
+    }
+
+    public static EmbedImpl embedFromJson(JsonObject obj) {
+        List<Embed.EmbedField> fields = new ArrayList<>();
+        JsonArray fieldArray = obj.get("fields").asArray();
+        fieldArray.forEach(value -> {
+            JsonObject field = value.asObject();
+            fields.add(new Embed.EmbedField(field.get("inline").asBoolean(), field.get("name").asString(), field.get("value").asString()));
+        });
+
+        String title = obj.get("title") == null ? null : obj.get("title").asString();
+        String description = obj.get("description") == null ? null : obj.get("description").asString();
+        Embed.EmbedFooter footer = null;
+        if (obj.get("footer") != null)
+            footer = embedFooterFromJson(obj.get("footer").asObject());
+        Embed.EmbedImage image = null;
+        if (obj.get("image") != null)
+            image = embedImageFromJson(obj.get("footer").asObject());
+        Embed.EmbedImage thumbnail = null;
+        if (obj.get("thumbnail") != null)
+            thumbnail = embedImageFromJson(obj.get("thumbnail").asObject());
+
+        return new EmbedImpl(fields, title, description, footer, image, thumbnail);
+    }
+
+    private static Embed.EmbedImage embedImageFromJson(JsonObject footer) {
+        String url = footer.get("url").asString();
+        int height = footer.get("height").asInt();
+        int width = footer.get("width").asInt();
+        String proxyUrl = footer.get("proxy_url") == null || footer.get("proxy_url").isNull() ? null : footer.get("proxy_url").asString();
+        return new Embed.EmbedImage(url, height, width, proxyUrl);
+    }
+
+    private static Embed.EmbedFooter embedFooterFromJson(JsonObject footer) {
+        String text = footer.get("text") == null || footer.get("text").isNull() ? null : footer.get("text").asString();
+        String iconUrl = footer.get("icon_url") == null || footer.get("icon_url").isNull() ? null : footer.get("icon_url").asString();
+        String proxyIconUrl = footer.get("proxy_icon_url") == null || footer.get("proxy_icon_url").isNull() ? null : footer.get("proxy_icon_url").asString();
+        return new Embed.EmbedFooter(text, iconUrl, proxyIconUrl);
     }
 
     public static AttachmentImpl attachmentFromJson(DiscordApi api, JsonObject attachment) {
