@@ -3,6 +3,7 @@ package me.xa5.discordjavalib.util;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.WriterConfig;
 import me.xa5.discordjavalib.entities.*;
 import me.xa5.discordjavalib.entities.impl.*;
 import me.xa5.discordjavalib.enums.GameType;
@@ -130,6 +131,7 @@ public class JsonFactory {
     }
 
     public static MessageImpl messageFromJson(DiscordApi api, JsonObject message) {
+        System.out.println(message.toString(WriterConfig.PRETTY_PRINT));
         //todo support DMs
         String id = message.get("id").asString();
         TextChannel channel = api.getTextChannel(message.get("channel_id").asString());
@@ -157,6 +159,25 @@ public class JsonFactory {
             mentionedRoles.add(api.getRole(obj.get("id").asString()));
         });
 
-        return new MessageImpl(api, id, channel, author, guild, editTimestamp, timestamp, webhookId, content, mentionsEveryone, pinned, tts, mentionedUsers, mentionedRoles);
+        List<Attachment> attachments = new ArrayList<>();
+        JsonArray attachmentArray = message.get("attachments").asArray();
+        attachmentArray.forEach(value -> {
+            JsonObject obj = value.asObject();
+            attachments.add(attachmentFromJson(api, obj));
+        });
+
+        return new MessageImpl(api, id, channel, author, guild, editTimestamp, timestamp, webhookId, content, mentionsEveryone, pinned, tts, mentionedUsers, mentionedRoles, attachments);
+    }
+
+    public static AttachmentImpl attachmentFromJson(DiscordApi api, JsonObject attachment) {
+        String proxyUrl = attachment.get("proxy_url").asString();
+        String fileName = attachment.get("filename").asString();
+        String url = attachment.get("url").asString();
+        String id = attachment.get("id").asString();
+        int height = attachment.get("height") == null ? -1 : attachment.get("height").asInt();
+        int width = attachment.get("width") == null ? -1 : attachment.get("width").asInt();
+        int size = attachment.get("size").asInt();
+
+        return new AttachmentImpl(api, proxyUrl, fileName, url, id, size, height, width);
     }
 }

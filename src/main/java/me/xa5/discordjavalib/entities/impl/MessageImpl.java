@@ -26,9 +26,10 @@ public class MessageImpl implements Message {
 
     private List<User> mentionedUsers;
     private List<Role> mentionedRoles;
+    private List<Attachment> attachments;
 
     public MessageImpl(DiscordApi api, String id, TextChannel channel, User author, Guild guild, LocalDateTime editTimestamp, LocalDateTime timestamp, String webhookId, String content,
-                       boolean mentionsEveryone, boolean pinned, boolean tts, List<User> mentionedUsers, List<Role> mentionedRoles) {
+                       boolean mentionsEveryone, boolean pinned, boolean tts, List<User> mentionedUsers, List<Role> mentionedRoles, List<Attachment> attachments) {
         this.api = api;
         this.channel = channel;
         this.author = author;
@@ -43,6 +44,7 @@ public class MessageImpl implements Message {
         this.tts = tts;
         this.mentionedUsers = mentionedUsers;
         this.mentionedRoles = mentionedRoles;
+        this.attachments = attachments;
     }
 
 
@@ -115,6 +117,11 @@ public class MessageImpl implements Message {
     @Override
     public List<Role> getMentionedRoles() {
         return mentionedRoles;
+    }
+
+    @Override
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
     @Override

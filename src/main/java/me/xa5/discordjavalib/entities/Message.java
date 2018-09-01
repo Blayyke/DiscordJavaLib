@@ -37,6 +37,8 @@ public interface Message extends DJLEntity, IdHolder {
 
     List<Role> getMentionedRoles();
 
+    List<Attachment> getAttachments();
+
     //todo List<Attachment> getAttachments();
 
     //todo List<Embed> getEmbeds();
