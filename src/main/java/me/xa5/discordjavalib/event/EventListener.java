@@ -3,6 +3,7 @@ package me.xa5.discordjavalib.event;
 import me.xa5.discordjavalib.event.guild.category.CategoryEvent;
 import me.xa5.discordjavalib.event.guild.category.EventChannelCategoryCreate;
 import me.xa5.discordjavalib.event.guild.category.EventChannelCategoryDelete;
+import me.xa5.discordjavalib.event.guild.category.EventChannelCategoryUpdate;
 import me.xa5.discordjavalib.event.guild.channel.*;
 import me.xa5.discordjavalib.event.guild.member.EventMemberUpdate;
 import me.xa5.discordjavalib.event.guild.member.EventPresenceUpdate;
@@ -28,17 +29,38 @@ public class EventListener {
         if (event instanceof CategoryEvent) onCategoryEvent((CategoryEvent) event);
         if (event instanceof EventChannelCategoryCreate) onCategoryCreate((EventChannelCategoryCreate) event);
         if (event instanceof EventChannelCategoryDelete) onCategoryDelete((EventChannelCategoryDelete) event);
+        if (event instanceof EventChannelCategoryUpdate) onCategoryUpdate((EventChannelCategoryUpdate) event);
 
         if (event instanceof ChannelEvent) onChannelEvent((ChannelEvent) event);
+        if (event instanceof VoiceChannelEvent) onVoiceChannelEvent((VoiceChannelEvent) event);
         if (event instanceof EventVoiceChannelCreate) onVoiceChannelCreate((EventVoiceChannelCreate) event);
         if (event instanceof EventVoiceChannelDelete) onVoiceChannelDelete((EventVoiceChannelDelete) event);
+        if (event instanceof EventVoiceChannelUpdate) onVoiceChannelUpdate((EventVoiceChannelUpdate) event);
+
+        if (event instanceof TextChannelEvent) onTextChannelEvent((TextChannelEvent) event);
         if (event instanceof EventTextChannelCreate) onTextChannelCreate((EventTextChannelCreate) event);
         if (event instanceof EventTextChannelDelete) onTextChannelDelete((EventTextChannelDelete) event);
+        if (event instanceof EventTextChannelUpdate) onTextChannelUpdate((EventTextChannelUpdate) event);
 
         if (event instanceof MessageEvent) onMessageEvent((MessageEvent) event);
         if (event instanceof EventMessageCreate) onMessageCreate((EventMessageCreate) event);
         if (event instanceof EventMessageDelete) onMessageDelete((EventMessageDelete) event);
-        if (event instanceof EventMemberUpdate) onMessageUpdate((EventMessageUpdate) event);
+        if (event instanceof EventMessageUpdate) onMessageUpdate((EventMessageUpdate) event);
+    }
+
+    public void onVoiceChannelEvent(VoiceChannelEvent event) {
+    }
+
+    public void onVoiceChannelUpdate(EventVoiceChannelUpdate event) {
+    }
+
+    public void onTextChannelEvent(TextChannelEvent event) {
+    }
+
+    public void onTextChannelUpdate(EventTextChannelUpdate event) {
+    }
+
+    public void onCategoryUpdate(EventChannelCategoryUpdate event) {
     }
 
     public void onMessageEvent(MessageEvent event) {
