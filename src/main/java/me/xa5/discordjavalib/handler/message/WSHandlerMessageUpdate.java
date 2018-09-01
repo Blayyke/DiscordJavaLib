@@ -15,7 +15,7 @@ public class WSHandlerMessageUpdate extends WSEventHandler {
 
     @Override
     public String getInternalEventName() {
-        return "message_delete";
+        return "message_update";
     }
 
     @Override
