@@ -24,7 +24,7 @@ public class WSHandlerGuildMemberUpdate extends WSEventHandler {
     @Override
     public void handle(WSClient client, JsonObject data) {
         GuildImpl guild = (GuildImpl) client.getApi().getGuild(data.get("guild_id").asString());
-        MemberImpl member = (MemberImpl) guild.getMember(data.get("member").asObject().get("id").asString());
+        MemberImpl member = (MemberImpl) guild.getMember(data.get("user").asObject().get("id").asString());
 
         String oldNick = member.getNickname();
         String nick = data.get("nick").isNull() ? null : data.get("nick").asString();
