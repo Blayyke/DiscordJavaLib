@@ -10,6 +10,7 @@ import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
 import me.xa5.discordjavalib.handler.*;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelCreate;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelDelete;
+import me.xa5.discordjavalib.handler.channel.WSHandlerChannelUpdate;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageCreate;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageDelete;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageUpdate;
@@ -45,6 +46,7 @@ public class WSClient {
 
         registerWSHandler(new WSHandlerChannelCreate(api));
         registerWSHandler(new WSHandlerChannelDelete(api));
+        registerWSHandler(new WSHandlerChannelUpdate(api));
 
         registerWSHandler(new WSHandlerMessageDelete(api));
         registerWSHandler(new WSHandlerMessageCreate(api));
