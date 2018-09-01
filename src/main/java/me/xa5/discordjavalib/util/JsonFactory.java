@@ -133,54 +133,65 @@ public class JsonFactory {
         //todo support DMs
         String id = message.get("id").asString();
         TextChannel channel = api.getTextChannel(message.get("channel_id").asString());
-        User author = api.getUser(message.get("author").asObject().get("id").asString());
+
+        User author = message.get("author") == null || message.get("author").isNull() ? null : api.getUser(message.get("author").asObject().get("id").asString());
         Guild guild = channel.getGuild();
         LocalDateTime editTimestamp = message.get("edit_timestamp") == null || message.get("edit_timestamp").isNull() ? null : DJLUtil.parseDate(message.get("edit_timestamp").asString());
-        LocalDateTime timestamp = DJLUtil.parseDate(message.get("timestamp").asString());
+        LocalDateTime timestamp = message.get("timestamp") == null || message.get("timestamp").isNull() ? null : DJLUtil.parseDate(message.get("timestamp").asString());
         String webhookId = message.get("webhook_id") == null || message.get("webhook_id").isNull() ? null : message.get("webhook_id").asString();
-        String content = message.get("content").asString();
-        boolean mentionsEveryone = message.get("mention_everyone").asBoolean();
-        boolean pinned = message.get("pinned").asBoolean();
-        boolean tts = message.get("tts").asBoolean();
+        String content = message.get("content") == null || message.get("content").isNull() ? null : message.get("content").asString();
+        boolean mentionsEveryone = message.get("mention_everyone") != null && !message.get("mention_everyone").isNull() && message.get("mention_everyone").asBoolean();
+        boolean pinned = message.get("pinned") != null && !message.get("pinned").isNull() && message.get("pinned").asBoolean();
+        boolean tts = message.get("tts") != null && !message.get("tts").isNull() && message.get("tts").asBoolean();
 
         List<User> mentionedUsers = new ArrayList<>();
-        JsonArray userArray = message.get("mentions").asArray();
-        userArray.forEach(value -> {
-            JsonObject obj = value.asObject();
-            mentionedUsers.add(api.getUser(obj.get("id").asString()));
-        });
+        if (message.get("mentions") != null && !message.get("mentions").isNull()) {
+            JsonArray userArray = message.get("mentions").asArray();
+            userArray.forEach(value -> {
+                JsonObject obj = value.asObject();
+                mentionedUsers.add(api.getUser(obj.get("id").asString()));
+            });
+        }
 
         List<Role> mentionedRoles = new ArrayList<>();
-        JsonArray rolesArray = message.get("mention_roles").asArray();
-        rolesArray.forEach(value -> {
-            JsonObject obj = value.asObject();
-            mentionedRoles.add(api.getRole(obj.get("id").asString()));
-        });
+        if (message.get("mention_roles") != null && !message.get("mention_roles").isNull()) {
+            JsonArray rolesArray = message.get("mention_roles").asArray();
+            rolesArray.forEach(value -> {
+                JsonObject obj = value.asObject();
+                mentionedRoles.add(api.getRole(obj.get("id").asString()));
+            });
+        }
 
         List<Attachment> attachments = new ArrayList<>();
-        JsonArray attachmentArray = message.get("attachments").asArray();
-        attachmentArray.forEach(value -> {
-            JsonObject obj = value.asObject();
-            attachments.add(attachmentFromJson(api, obj));
-        });
+        if (message.get("attachments") != null && !message.get("attachments").isNull()) {
+            JsonArray attachmentArray = message.get("attachments").asArray();
+            attachmentArray.forEach(value -> {
+                JsonObject obj = value.asObject();
+                attachments.add(attachmentFromJson(api, obj));
+            });
+        }
 
         List<Embed> embeds = new ArrayList<>();
-        JsonArray embedArray = message.get("embeds").asArray();
-        embedArray.forEach(value -> {
-            JsonObject obj = value.asObject();
-            embeds.add(embedFromJson(obj));
-        });
+        if (message.get("embeds") != null && !message.get("embeds").isNull()) {
+            JsonArray embedArray = message.get("embeds").asArray();
+            embedArray.forEach(value -> {
+                JsonObject obj = value.asObject();
+                embeds.add(embedFromJson(obj));
+            });
+        }
 
         return new MessageImpl(api, id, channel, author, guild, editTimestamp, timestamp, webhookId, content, mentionsEveryone, pinned, tts, mentionedUsers, mentionedRoles, attachments, embeds);
     }
 
     public static EmbedImpl embedFromJson(JsonObject obj) {
         List<Embed.EmbedField> fields = new ArrayList<>();
-        JsonArray fieldArray = obj.get("fields").asArray();
-        fieldArray.forEach(value -> {
-            JsonObject field = value.asObject();
-            fields.add(new Embed.EmbedField(field.get("inline").asBoolean(), field.get("name").asString(), field.get("value").asString()));
-        });
+        if (obj.get("fields") != null && !obj.get("fields").isNull()) {
+            JsonArray fieldArray = obj.get("fields").asArray();
+            fieldArray.forEach(value -> {
+                JsonObject field = value.asObject();
+                fields.add(new Embed.EmbedField(field.get("inline").asBoolean(), field.get("name").asString(), field.get("value").asString()));
+            });
+        }
 
         String title = obj.get("title") == null ? null : obj.get("title").asString();
         String description = obj.get("description") == null ? null : obj.get("description").asString();
