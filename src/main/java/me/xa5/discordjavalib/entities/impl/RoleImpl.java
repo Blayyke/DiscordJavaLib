@@ -1,6 +1,7 @@
 package me.xa5.discordjavalib.entities.impl;
 
 import me.xa5.discordjavalib.entities.DiscordApi;
+import me.xa5.discordjavalib.entities.Guild;
 import me.xa5.discordjavalib.entities.Role;
 
 import java.awt.*;
@@ -15,8 +16,9 @@ public class RoleImpl implements Role {
     private boolean mentionable;
     private boolean managed;
     private boolean hoisted;
+    private Guild guild;
 
-    public RoleImpl(DiscordApi api, String name, Color color, int position, long rawPermissions, boolean mentionable, boolean managed, boolean hoisted, String id) {
+    public RoleImpl(DiscordApi api, String name, Color color, int position, long rawPermissions, boolean mentionable, boolean managed, boolean hoisted, String id, Guild guild) {
         this.api = api;
         this.id = id;
         this.name = name;
@@ -26,6 +28,7 @@ public class RoleImpl implements Role {
         this.mentionable = mentionable;
         this.managed = managed;
         this.hoisted = hoisted;
+        this.guild = guild;
     }
 
     @Override
@@ -46,6 +49,11 @@ public class RoleImpl implements Role {
     @Override
     public Color getColor() {
         return color;
+    }
+
+    @Override
+    public Guild getGuild() {
+        return guild;
     }
 
     @Override

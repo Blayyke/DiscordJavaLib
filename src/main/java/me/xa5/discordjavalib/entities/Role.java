@@ -14,4 +14,6 @@ public interface Role extends IdHolder, NameHolder, Mentionable, DJLEntity {
     boolean isHoisted();
 
     Color getColor();
+
+    Guild getGuild();
 }

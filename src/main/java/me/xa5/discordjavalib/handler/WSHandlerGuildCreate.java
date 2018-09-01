@@ -3,7 +3,10 @@ package me.xa5.discordjavalib.handler;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import me.xa5.discordjavalib.WSClient;
-import me.xa5.discordjavalib.entities.*;
+import me.xa5.discordjavalib.entities.DiscordApi;
+import me.xa5.discordjavalib.entities.ExplicitContentFilterLevel;
+import me.xa5.discordjavalib.entities.Icon;
+import me.xa5.discordjavalib.entities.Presence;
 import me.xa5.discordjavalib.entities.impl.*;
 import me.xa5.discordjavalib.enums.*;
 import me.xa5.discordjavalib.util.DJLUtil;
@@ -35,7 +38,7 @@ public class WSHandlerGuildCreate extends WSEventHandler {
             ChannelType type = ChannelType.fromKey(obj.get("type").asInt());
             switch (type) {
                 case CATEGORY:
-                    ChannelCategoryImpl category = JsonFactory.categoryFromJson(getApi(), obj);
+                    ChannelCategoryImpl category = JsonFactory.categoryFromJson(getApi(), guild, obj);
                     guild.getChannelCategoryMap().put(category.getId(), category);
                     break;
                 case TEXT:
@@ -57,7 +60,7 @@ public class WSHandlerGuildCreate extends WSEventHandler {
 
         JsonArray roles = data.get("roles").asArray();
         roles.forEach(value -> {
-            RoleImpl role = JsonFactory.roleFromJson(getApi(), value.asObject());
+            RoleImpl role = JsonFactory.roleFromJson(getApi(), guild, value.asObject());
             guild.getRoleMap().put(role.getId(), role);
         });
 

@@ -6,13 +6,12 @@ import me.xa5.discordjavalib.entities.ChannelCategory;
 import me.xa5.discordjavalib.entities.DiscordApi;
 import me.xa5.discordjavalib.entities.TextChannel;
 import me.xa5.discordjavalib.entities.VoiceChannel;
-import me.xa5.discordjavalib.entities.impl.ChannelCategoryImpl;
 import me.xa5.discordjavalib.entities.impl.GuildImpl;
-import me.xa5.discordjavalib.entities.impl.TextChannelImpl;
-import me.xa5.discordjavalib.entities.impl.VoiceChannelImpl;
 import me.xa5.discordjavalib.enums.ChannelType;
+import me.xa5.discordjavalib.event.guild.category.EventChannelCategoryDelete;
+import me.xa5.discordjavalib.event.guild.channel.EventTextChannelDelete;
+import me.xa5.discordjavalib.event.guild.channel.EventVoiceChannelDelete;
 import me.xa5.discordjavalib.handler.WSEventHandler;
-import me.xa5.discordjavalib.util.JsonFactory;
 
 public class WSHandlerChannelDelete extends WSEventHandler {
     public WSHandlerChannelDelete(DiscordApi api) {
@@ -34,17 +33,17 @@ public class WSHandlerChannelDelete extends WSEventHandler {
             case VOICE:
                 VoiceChannel voiceChannel = guild.getVoiceChannel(channelId);
                 guild.getVoiceChannelMap().remove(voiceChannel.getId());
-                //todo dispatch voicechanneldeleteevent
+                getApi().dispatchEvent(new EventVoiceChannelDelete(getApi(), voiceChannel));
                 break;
             case TEXT:
                 TextChannel textChannel = guild.getTextChannel(channelId);
-                guild.getTextChannelMap().remove(textChannel.getId(), textChannel);
-                //todo dispatch textchanneldeleteevent
+                guild.getTextChannelMap().remove(textChannel.getId());
+                getApi().dispatchEvent(new EventTextChannelDelete(getApi(), textChannel));
                 break;
             case CATEGORY:
-                ChannelCategory channelCategory = guild.getChannelCategory(channelId);
-                guild.getChannelCategoryMap().remove(channelCategory.getId());
-                //todo dispatch channelcategorydeleteevent
+                ChannelCategory category = guild.getChannelCategory(channelId);
+                guild.getChannelCategoryMap().remove(category.getId());
+                getApi().dispatchEvent(new EventChannelCategoryDelete(getApi(), category));
                 break;
             default:
                 throw new RuntimeException("Unknown ChannelType for CHANNEL_DELETE: " + type);

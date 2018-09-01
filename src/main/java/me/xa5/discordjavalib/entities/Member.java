@@ -19,4 +19,6 @@ public interface Member {
     String getDisplayName();
 
     boolean hasNickname();
+
+    Guild getGuild();
 }

@@ -4,10 +4,17 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import me.xa5.discordjavalib.entities.DiscordApi;
 import me.xa5.discordjavalib.entities.Game;
 import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
+import me.xa5.discordjavalib.event.EventListener;
+import me.xa5.discordjavalib.util.Assert;
 import okhttp3.OkHttpClient;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DiscordApiBuilder {
     private WebSocketFactory webSocketFactory = new WebSocketFactory();
+    private List<EventListener> listeners = new ArrayList<>();
     private OkHttpClient httpClient = new OkHttpClient.Builder().build();
     private String token = null;
     private Game game = null;
@@ -18,9 +25,10 @@ public class DiscordApiBuilder {
      * @return The newly-created {@link DiscordApi}, ready for login.
      */
     public DiscordApi build() {
-        if (token == null || token.isEmpty()) throw new RuntimeException("need to provide nonnull & non-empty token!");
-
-        return new DiscordApiImpl(webSocketFactory, httpClient, token, game);
+        Assert.notNull(this.httpClient, "httpClient");
+        Assert.notNull(this.webSocketFactory, "webSocketFactory");
+        Assert.notNull(listeners, "listeners");
+        return new DiscordApiImpl(webSocketFactory, httpClient, token, game, listeners);
     }
 
     /**
@@ -64,6 +72,30 @@ public class DiscordApiBuilder {
      */
     public DiscordApiBuilder setGame(Game game) {
         this.game = game;
+        return this;
+    }
+
+    /**
+     * Provide {@link EventListener}s for use in dispatching events.
+     *
+     * @param listeners Array of {@link EventListener} objects
+     * @return The {@link DiscordApiBuilder}
+     */
+    public DiscordApiBuilder addListeners(EventListener... listeners) {
+        Assert.noneNull(listeners, "listeners");
+        Collections.addAll(this.listeners, listeners);
+        return this;
+    }
+
+    /**
+     * Provide {@link EventListener}s for use in dispatching events.
+     *
+     * @param listeners Array of {@link EventListener} objects
+     * @return The {@link DiscordApiBuilder}
+     */
+    public DiscordApiBuilder addListeners(List<EventListener> listeners) {
+        Assert.noneNull(listeners, "listeners");
+        this.listeners.addAll(listeners);
         return this;
     }
 }

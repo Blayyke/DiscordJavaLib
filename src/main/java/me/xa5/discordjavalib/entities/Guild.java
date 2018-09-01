@@ -60,4 +60,6 @@ public interface Guild extends NameHolder, IdHolder, DJLEntity {
     VoiceState getVoiceState(Member member);
 
     VoiceState getVoiceState(String id);
+
+    List<TextChannel> getTextChannels();
 }

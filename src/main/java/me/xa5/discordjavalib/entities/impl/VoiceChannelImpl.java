@@ -2,6 +2,7 @@ package me.xa5.discordjavalib.entities.impl;
 
 import me.xa5.discordjavalib.entities.ChannelCategory;
 import me.xa5.discordjavalib.entities.DiscordApi;
+import me.xa5.discordjavalib.entities.Guild;
 import me.xa5.discordjavalib.entities.VoiceChannel;
 
 public class VoiceChannelImpl implements VoiceChannel {
@@ -12,8 +13,9 @@ public class VoiceChannelImpl implements VoiceChannel {
     private final int bitrate;
     private final int userLimit;
     private DiscordApi api;
+    private Guild guild;
 
-    public VoiceChannelImpl(DiscordApi api, ChannelCategory parentCategory, String id, String name, int bitrate, int userLimit, int position) {
+    public VoiceChannelImpl(DiscordApi api, ChannelCategory parentCategory, String id, String name, int bitrate, int userLimit, int position, Guild guild) {
         this.api = api;
         this.position = position;
         this.parentCategory = parentCategory;
@@ -21,6 +23,7 @@ public class VoiceChannelImpl implements VoiceChannel {
         this.name = name;
         this.bitrate = bitrate;
         this.userLimit = userLimit;
+        this.guild = guild;
     }
 
     @Override
@@ -56,5 +59,10 @@ public class VoiceChannelImpl implements VoiceChannel {
     @Override
     public DiscordApi getApi() {
         return api;
+    }
+
+    @Override
+    public Guild getGuild() {
+        return guild;
     }
 }

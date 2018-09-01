@@ -42,29 +42,31 @@ public class JsonFactory {
         );
     }
 
-    public static RoleImpl roleFromJson(DiscordApi api, JsonObject role) {
+    public static RoleImpl roleFromJson(DiscordApi api, Guild guild, JsonObject role) {
         return new RoleImpl(
-                api, role.get("name").asString(), DJLUtil.parseColor(role.get("color").asInt()), role.get("position").asInt(), role.get("permissions").asLong(), role.get("mentionable").asBoolean(), role.get("managed").asBoolean(), role.get("hoist").asBoolean(), role.get("id").asString()
-        );
+                api, role.get("name").asString(), DJLUtil.parseColor(role.get("color").asInt()), role.get("position").asInt(), role.get("permissions").asLong(), role.get("mentionable").asBoolean(), role.get("managed").asBoolean(), role.get("hoist").asBoolean(), role.get("id").asString(),
+                guild);
     }
 
-    public static ChannelCategoryImpl categoryFromJson(DiscordApi api, JsonObject category) {
+    public static ChannelCategoryImpl categoryFromJson(DiscordApi api, Guild guild, JsonObject category) {
         return new ChannelCategoryImpl(
-                api, category.get("id").asString(), category.get("name").asString(), category.get("position").asInt()
+                api, guild, category.get("id").asString(), category.get("name").asString(), category.get("position").asInt()
         );
     }
 
     public static TextChannelImpl textChannelFromJson(DiscordApi api, JsonObject channel, GuildImpl guild) {
         ChannelCategory parent = channel.get("parent_id").isNull() ? null : guild.getChannelCategory(channel.get("parent_id").asString());
         return new TextChannelImpl(
-                api, channel.get("last_message_id").isNull() ? null : channel.get("last_message_id").asString(), channel.get("position").asInt(), parent, channel.get("id").asString(), channel.get("name").asString(), channel.get("topic").isNull() ? null : channel.get("topic").asString()
+                api, channel.get("last_message_id").isNull() ? null : channel.get("last_message_id").asString(), channel.get("position").asInt(), parent,
+                channel.get("id").asString(), channel.get("name").asString(), channel.get("topic").isNull() ? null : channel.get("topic").asString(), guild
         );
     }
 
     public static VoiceChannelImpl voiceChannelFromJson(DiscordApi api, JsonObject channel, GuildImpl guild) {
         ChannelCategory parent = channel.get("parent_id").isNull() ? null : guild.getChannelCategory(channel.get("parent_id").asString());
         return new VoiceChannelImpl(
-                api, parent, channel.get("id").asString(), channel.get("name").asString(), channel.get("bitrate").asInt(), channel.get("user_limit").asInt(), channel.get("position").asInt()
+                api, parent, channel.get("id").asString(), channel.get("name").asString(), channel.get("bitrate").asInt(), channel.get("user_limit").asInt(),
+                channel.get("position").asInt(), guild
         );
     }
 
@@ -86,7 +88,7 @@ public class JsonFactory {
                 .getApi())
                 .getOrCreateUser(userObj);
 
-        return new MemberImpl(joinDate, roles, user, isDeafened, isMuted, nickname);
+        return new MemberImpl(guild, joinDate, roles, user, isDeafened, isMuted, nickname);
     }
 
     public static UserImpl userFromJson(DiscordApi api, JsonObject userObj) {
@@ -125,5 +127,36 @@ public class JsonFactory {
         if (!presence.get("game").isNull())
             game = JsonFactory.gameFromJson(api, presence.get("game").asObject());
         return new Presence(userId, status, game);
+    }
+
+    public static MessageImpl messageFromJson(DiscordApi api, JsonObject message) {
+        //todo support DMs
+        String id = message.get("id").asString();
+        TextChannel channel = api.getTextChannel(message.get("channel_id").asString());
+        User author = api.getUser(message.get("author").asObject().get("id").asString());
+        Guild guild = channel.getGuild();
+        LocalDateTime editTimestamp = message.get("edit_timestamp") == null || message.get("edit_timestamp").isNull() ? null : DJLUtil.parseDate(message.get("edit_timestamp").asString());
+        LocalDateTime timestamp = DJLUtil.parseDate(message.get("timestamp").asString());
+        String webhookId = message.get("webhook_id") == null || message.get("webhook_id").isNull() ? null : message.get("webhook_id").asString();
+        String content = message.get("content").asString();
+        boolean mentionsEveryone = message.get("mention_everyone").asBoolean();
+        boolean pinned = message.get("pinned").asBoolean();
+        boolean tts = message.get("tts").asBoolean();
+
+        List<User> mentionedUsers = new ArrayList<>();
+        JsonArray userArray = message.get("mentions").asArray();
+        userArray.forEach(value -> {
+            JsonObject obj = value.asObject();
+            mentionedUsers.add(api.getUser(obj.get("id").asString()));
+        });
+
+        List<Role> mentionedRoles = new ArrayList<>();
+        JsonArray rolesArray = message.get("mention_roles").asArray();
+        rolesArray.forEach(value -> {
+            JsonObject obj = value.asObject();
+            mentionedRoles.add(api.getRole(obj.get("id").asString()));
+        });
+
+        return new MessageImpl(api, id, channel, author, guild, editTimestamp, timestamp, webhookId, content, mentionsEveryone, pinned, tts, mentionedUsers, mentionedRoles);
     }
 }

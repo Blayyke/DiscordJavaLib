@@ -1,5 +1,6 @@
 package me.xa5.discordjavalib.entities.impl;
 
+import me.xa5.discordjavalib.entities.Guild;
 import me.xa5.discordjavalib.entities.Member;
 import me.xa5.discordjavalib.entities.Role;
 import me.xa5.discordjavalib.entities.User;
@@ -15,8 +16,10 @@ public class MemberImpl implements Member {
     private final boolean isDeafened;
     private final boolean isMuted;
     private String nickname;
+    private Guild guild;
 
-    public MemberImpl(LocalDateTime joinDate, List<Role> roles, User user, boolean isDeafened, boolean isMuted, String nickname) {
+    public MemberImpl(Guild guild, LocalDateTime joinDate, List<Role> roles, User user, boolean isDeafened, boolean isMuted, String nickname) {
+        this.guild = guild;
         this.joinDate = joinDate;
         this.roles = roles;
         this.user = user;
@@ -63,6 +66,11 @@ public class MemberImpl implements Member {
     @Override
     public boolean hasNickname() {
         return getNickname() != null;
+    }
+
+    @Override
+    public Guild getGuild() {
+        return guild;
     }
 
     public void setNickname(String nickname) {

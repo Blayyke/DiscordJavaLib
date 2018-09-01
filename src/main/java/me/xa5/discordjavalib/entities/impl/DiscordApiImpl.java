@@ -6,6 +6,8 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import me.xa5.discordjavalib.DJLConstants;
 import me.xa5.discordjavalib.WSClient;
 import me.xa5.discordjavalib.entities.*;
+import me.xa5.discordjavalib.event.Event;
+import me.xa5.discordjavalib.event.EventListener;
 import me.xa5.discordjavalib.util.JsonFactory;
 import me.xa5.discordjavalib.util.Logger;
 import okhttp3.OkHttpClient;
@@ -16,26 +18,29 @@ import java.util.*;
 
 public class DiscordApiImpl implements DiscordApi {
     private final WSClient wsClient;
+    private final Logger logger = Logger.create(DJLConstants.NAME);
     private WebSocketFactory websocketFactory;
     private OkHttpClient httpClient;
     private String token;
-    private long ping;
     private Game game;
     private BotUser botAccount;
     private Map<String, GuildImpl> guildMap = new HashMap<>();
     private Map<String, UserImpl> userMap = new HashMap<>();
+    private List<EventListener> listeners;
     private boolean loggedIn = false;
-    private Logger logger = Logger.create(DJLConstants.NAME);
+    private long ping;
 
-    public DiscordApiImpl(WebSocketFactory websocketFactory, OkHttpClient httpClient, String token, Game game) {
+    public DiscordApiImpl(WebSocketFactory websocketFactory, OkHttpClient httpClient, String token, Game game, List<EventListener> listeners) {
         this.websocketFactory = websocketFactory;
         this.httpClient = httpClient;
         this.token = token;
         this.game = game;
         this.wsClient = new WSClient(this);
+        this.listeners = listeners;
     }
 
     private void connect() throws IOException, WebSocketException {
+        verifyToken();
         wsClient.connect();
     }
 
@@ -117,5 +122,46 @@ public class DiscordApiImpl implements DiscordApi {
     @Override
     public Guild getGuild(String id) {
         return guildMap.get(id);
+    }
+
+    @Override
+    public TextChannel getTextChannel(String id) {
+        return getGuilds().stream().map(guild -> guild.getTextChannel(id)).filter(Objects::nonNull).findFirst().orElse(null);
+    }
+
+    @Override
+    public Role getRole(String id) {
+        return getGuilds().stream().map(guild -> guild.getRole(id)).filter(Objects::nonNull).findFirst().orElse(null);
+    }
+
+    @Override
+    public void addListener(EventListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void dispatchEvent(Event event) {
+        logger.trace("Dispatching event " + event.getClass().getSimpleName() + " to all registered listeners.");
+        try {
+            getListeners().forEach(listener -> listener.onEvent(event));
+        } catch (Exception e) {
+            logger.error("Uncaught exception during event handling: ");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<EventListener> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public User getUser(String id) {
+        return userMap.get(id);
+    }
+
+    private void verifyToken() {
+        if (token == null || token.isEmpty()) throw new RuntimeException("need to provide nonnull & non-empty token!");
+        //todo HTTP check with discord.
     }
 }

@@ -2,6 +2,7 @@ package me.xa5.discordjavalib.entities.impl;
 
 import me.xa5.discordjavalib.entities.ChannelCategory;
 import me.xa5.discordjavalib.entities.DiscordApi;
+import me.xa5.discordjavalib.entities.Guild;
 import me.xa5.discordjavalib.entities.TextChannel;
 
 public class TextChannelImpl implements TextChannel {
@@ -12,8 +13,9 @@ public class TextChannelImpl implements TextChannel {
     private String id;
     private String name;
     private DiscordApi api;
+    private Guild guild;
 
-    public TextChannelImpl(DiscordApi api, String lastMessageId, int position, ChannelCategory parentCategory, String id, String name, String topic) {
+    public TextChannelImpl(DiscordApi api, String lastMessageId, int position, ChannelCategory parentCategory, String id, String name, String topic, Guild guild) {
         this.api = api;
         this.topic = topic;
         this.lastMessageId = lastMessageId;
@@ -21,6 +23,7 @@ public class TextChannelImpl implements TextChannel {
         this.parentCategory = parentCategory;
         this.id = id;
         this.name = name;
+        this.guild = guild;
     }
 
     @Override
@@ -31,6 +34,11 @@ public class TextChannelImpl implements TextChannel {
     @Override
     public String getLastMessageId() {
         return lastMessageId;
+    }
+
+    @Override
+    public Guild getGuild() {
+        return guild;
     }
 
     @Override
