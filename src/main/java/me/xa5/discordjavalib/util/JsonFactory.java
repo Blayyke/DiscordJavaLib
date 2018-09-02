@@ -234,4 +234,16 @@ public class JsonFactory {
 
         return new AttachmentImpl(api, proxyUrl, fileName, url, id, size, height, width);
     }
+
+    public static JsonObject newPayload(int opCode, JsonObject data) {
+        return Json.object()
+                .set("op", opCode)
+                .set("d", data);
+    }
+
+    public static JsonObject newPayload(int opCode, long data) {
+        return Json.object()
+                .set("op", opCode)
+                .set("d", data);
+    }
 }

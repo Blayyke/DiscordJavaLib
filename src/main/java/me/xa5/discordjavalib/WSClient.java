@@ -133,33 +133,31 @@ public class WSClient {
     }
 
     private void identify() {
-        JsonObject payload = Json.object()
-                .set("op", 2)
-                .set("d", Json.object()
-                        .set("token", api.getToken())
-                        .set("compress", true)
-                        .set("properties", Json.object()
-                                .set("$os", System.getProperty("os.name"))
-                                .set("$device", DJLConstants.NAME)
-                                .set("$browser", DJLConstants.NAME))
-                        .set("presence", Json.object()
-                                .set("status", "dnd")
-                                .set("afk", false)));
-
+        JsonObject data = Json.object()
+                .set("token", api.getToken())
+                .set("compress", true)
+                .set("properties", Json.object()
+                        .set("$os", System.getProperty("os.name"))
+                        .set("$device", DJLConstants.NAME)
+                        .set("$browser", DJLConstants.NAME))
+                .set("presence", Json.object()
+                        .set("status", "dnd")
+                        .set("afk", false));
         if (api.getGame() != null)
-            payload.set("game", JsonFactory.from(api.getGame()));
+            data.set("game", JsonFactory.from(api.getGame()));
 
-        send(payload);
+
+        send(JsonFactory.newPayload(2, data));
         api.getLogger().debug("Sent IDENTIFY(op:2).");
     }
 
-    private void send(JsonObject payload) {
+    public void send(JsonObject payload) {
         client.sendText(payload.toString());
         api.getLogger().trace("Sent WS message: " + payload.toString().replace(api.getToken(), "{TOKEN REDACTED}"));
     }
 
     void sendHeartbeat() {
-        send(Json.object().set("op", 1).set("d", sequence));
+        send(JsonFactory.newPayload(1, sequence));
         heartbeatSendTime = System.currentTimeMillis();
         api.getLogger().trace("Sent heartbeat.");
     }
@@ -182,11 +180,9 @@ public class WSClient {
 
     public void sendGuildSync(String id) {
         api.getLogger().debug("Sending guild sync for " + id + '.');
-        send(Json.object()
-                .add("op", 8)
-                .add("d", Json.object()
-                        .add("guild_id", id)
-                        .add("query", "")
-                        .add("limit", 0)));
+        send(JsonFactory.newPayload(8, Json.object()
+                .add("guild_id", id)
+                .add("query", "")
+                .add("limit", 0)));
     }
 }
