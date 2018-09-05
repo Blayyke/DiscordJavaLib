@@ -11,12 +11,15 @@ import me.xa5.discordjavalib.handler.*;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelCreate;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelDelete;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelUpdate;
+import me.xa5.discordjavalib.handler.guild.WSHandlerGuildCreate;
+import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberUpdate;
+import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMembersChunk;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageCreate;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageDelete;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageUpdate;
-import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleCreate;
-import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleDelete;
-import me.xa5.discordjavalib.handler.role.WSHandlerGuildRoleUpdate;
+import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleCreate;
+import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleDelete;
+import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleUpdate;
 import me.xa5.discordjavalib.util.JsonFactory;
 import okhttp3.Response;
 
