@@ -1,4 +1,4 @@
-package me.xa5.discordjavalib.handler.role;
+package me.xa5.discordjavalib.handler.guild.role;
 
 import com.eclipsesource.json.JsonObject;
 import me.xa5.discordjavalib.WSClient;

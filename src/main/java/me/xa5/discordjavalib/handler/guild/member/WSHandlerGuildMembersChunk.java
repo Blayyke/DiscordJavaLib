@@ -1,4 +1,4 @@
-package me.xa5.discordjavalib.handler;
+package me.xa5.discordjavalib.handler.guild.member;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -6,6 +6,7 @@ import me.xa5.discordjavalib.WSClient;
 import me.xa5.discordjavalib.entities.DiscordApi;
 import me.xa5.discordjavalib.entities.impl.GuildImpl;
 import me.xa5.discordjavalib.entities.impl.MemberImpl;
+import me.xa5.discordjavalib.handler.WSEventHandler;
 import me.xa5.discordjavalib.util.JsonFactory;
 
 public class WSHandlerGuildMembersChunk extends WSEventHandler {

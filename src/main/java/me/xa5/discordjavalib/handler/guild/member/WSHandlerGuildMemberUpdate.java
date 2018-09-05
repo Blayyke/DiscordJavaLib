@@ -1,4 +1,4 @@
-package me.xa5.discordjavalib.handler;
+package me.xa5.discordjavalib.handler.guild.member;
 
 import com.eclipsesource.json.JsonObject;
 import me.xa5.discordjavalib.WSClient;
@@ -7,6 +7,7 @@ import me.xa5.discordjavalib.entities.Role;
 import me.xa5.discordjavalib.entities.impl.GuildImpl;
 import me.xa5.discordjavalib.entities.impl.MemberImpl;
 import me.xa5.discordjavalib.event.guild.member.EventMemberUpdate;
+import me.xa5.discordjavalib.handler.WSEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
