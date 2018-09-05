@@ -7,19 +7,23 @@ import com.eclipsesource.json.WriterConfig;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import me.xa5.discordjavalib.entities.impl.DiscordApiImpl;
-import me.xa5.discordjavalib.handler.*;
+import me.xa5.discordjavalib.handler.WSEventHandler;
+import me.xa5.discordjavalib.handler.WSHandlerPresenceUpdate;
+import me.xa5.discordjavalib.handler.WSHandlerReady;
+import me.xa5.discordjavalib.handler.WSHandlerTypingStart;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelCreate;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelDelete;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelUpdate;
 import me.xa5.discordjavalib.handler.guild.WSHandlerGuildCreate;
+import me.xa5.discordjavalib.handler.guild.emotes.WSHandlerGuildEmotesUpdate;
 import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberUpdate;
 import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMembersChunk;
-import me.xa5.discordjavalib.handler.message.WSHandlerMessageCreate;
-import me.xa5.discordjavalib.handler.message.WSHandlerMessageDelete;
-import me.xa5.discordjavalib.handler.message.WSHandlerMessageUpdate;
 import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleCreate;
 import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleDelete;
 import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleUpdate;
+import me.xa5.discordjavalib.handler.message.WSHandlerMessageCreate;
+import me.xa5.discordjavalib.handler.message.WSHandlerMessageDelete;
+import me.xa5.discordjavalib.handler.message.WSHandlerMessageUpdate;
 import me.xa5.discordjavalib.util.JsonFactory;
 import okhttp3.Response;
 
@@ -62,6 +66,8 @@ public class WSClient {
 
         registerWSHandler(new WSHandlerGuildMembersChunk(api));
         registerWSHandler(new WSHandlerGuildMemberUpdate(api));
+
+        registerWSHandler(new WSHandlerGuildEmotesUpdate(api));
     }
 
     private void registerWSHandler(WSEventHandler handler) {
