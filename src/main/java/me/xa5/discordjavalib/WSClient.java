@@ -16,6 +16,8 @@ import me.xa5.discordjavalib.handler.channel.WSHandlerChannelDelete;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelUpdate;
 import me.xa5.discordjavalib.handler.guild.WSHandlerGuildCreate;
 import me.xa5.discordjavalib.handler.guild.emotes.WSHandlerGuildEmotesUpdate;
+import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberAdd;
+import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberRemove;
 import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberUpdate;
 import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMembersChunk;
 import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleCreate;
@@ -66,6 +68,8 @@ public class WSClient {
 
         registerWSHandler(new WSHandlerGuildMembersChunk(api));
         registerWSHandler(new WSHandlerGuildMemberUpdate(api));
+        registerWSHandler(new WSHandlerGuildMemberRemove(api));
+        registerWSHandler(new WSHandlerGuildMemberAdd(api));
 
         registerWSHandler(new WSHandlerGuildEmotesUpdate(api));
     }
@@ -78,7 +82,7 @@ public class WSClient {
     public void connect() throws IOException, WebSocketException {
         http = new DJLHttp(api);
 
-        client = api.getWebsocketFactory().createSocket(getWebSocketUrl());
+        client = api.getWebSocketFactory().createSocket(getWebSocketUrl());
         client.addListener(new WSListener(this, api));
         client.addHeader("Authorization", "Bot " + api.getToken());
         client.connect();

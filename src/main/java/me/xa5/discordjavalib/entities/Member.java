@@ -3,7 +3,7 @@ package me.xa5.discordjavalib.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface Member {
+public interface Member extends DJLEntity {
     List<Role> getRoles();
 
     boolean isDeafened();

@@ -108,7 +108,7 @@ public class WSHandlerGuildCreate extends WSEventHandler {
 
         members.forEach(value -> {
             JsonObject memberObj = value.asObject();
-            MemberImpl member = JsonFactory.memberFromJson(guild, memberObj);
+            MemberImpl member = JsonFactory.memberFromJson(getApi(), memberObj, guild);
             guild.getMemberMap().put(member.getUser().getId(), member);
         });
 

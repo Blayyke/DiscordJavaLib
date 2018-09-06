@@ -1,9 +1,6 @@
 package me.xa5.discordjavalib.entities.impl;
 
-import me.xa5.discordjavalib.entities.Guild;
-import me.xa5.discordjavalib.entities.Member;
-import me.xa5.discordjavalib.entities.Role;
-import me.xa5.discordjavalib.entities.User;
+import me.xa5.discordjavalib.entities.*;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -17,8 +14,10 @@ public class MemberImpl implements Member {
     private final boolean isMuted;
     private String nickname;
     private Guild guild;
+    private DiscordApi api;
 
-    public MemberImpl(Guild guild, LocalDateTime joinDate, List<Role> roles, User user, boolean isDeafened, boolean isMuted, String nickname) {
+    public MemberImpl(DiscordApi api, LocalDateTime joinDate, List<Role> roles, User user, boolean isDeafened, boolean isMuted, String nickname, Guild guild) {
+        this.api = api;
         this.guild = guild;
         this.joinDate = joinDate;
         this.roles = roles;
@@ -79,5 +78,10 @@ public class MemberImpl implements Member {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public DiscordApi getApi() {
+        return api;
     }
 }

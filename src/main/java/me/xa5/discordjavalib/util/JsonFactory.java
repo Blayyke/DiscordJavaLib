@@ -70,7 +70,7 @@ public class JsonFactory {
         );
     }
 
-    public static MemberImpl memberFromJson(GuildImpl guild, JsonObject obj) {
+    public static MemberImpl memberFromJson(DiscordApi api, JsonObject obj, GuildImpl guild) {
         LocalDateTime joinDate = DJLUtil.parseDate(obj.get("joined_at").asString());
         boolean isDeafened = obj.get("deaf").asBoolean();
         boolean isMuted = obj.get("mute").asBoolean();
@@ -87,8 +87,7 @@ public class JsonFactory {
         User user = ((DiscordApiImpl) guild
                 .getApi())
                 .getOrCreateUser(userObj);
-
-        return new MemberImpl(guild, joinDate, roles, user, isDeafened, isMuted, nickname);
+        return new MemberImpl(api, joinDate, roles, user, isDeafened, isMuted, nickname, guild);
     }
 
     public static UserImpl userFromJson(DiscordApi api, JsonObject userObj) {

@@ -44,7 +44,7 @@ public class DiscordApiImpl implements DiscordApi {
         wsClient.connect();
     }
 
-    public WebSocketFactory getWebsocketFactory() {
+    public WebSocketFactory getWebSocketFactory() {
         return websocketFactory;
     }
 
@@ -59,6 +59,8 @@ public class DiscordApiImpl implements DiscordApi {
 
     public void invalidate() {
         guildMap.clear();
+        userMap.clear();
+
         throw new NotImplementedException();
     }
 
