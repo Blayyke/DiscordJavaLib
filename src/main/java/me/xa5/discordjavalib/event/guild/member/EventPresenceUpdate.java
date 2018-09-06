@@ -1,14 +1,14 @@
 package me.xa5.discordjavalib.event.guild.member;
 
 import me.xa5.discordjavalib.entities.DiscordApi;
-import me.xa5.discordjavalib.entities.Guild;
+import me.xa5.discordjavalib.entities.Member;
 import me.xa5.discordjavalib.entities.Presence;
 
 public class EventPresenceUpdate extends MemberEvent {
     private final Presence oldPresence;
 
-    public EventPresenceUpdate(DiscordApi api, Guild guild, Presence oldPresence) {
-        super(api, guild.getMember(oldPresence.getUserId()));
+    public EventPresenceUpdate(DiscordApi api, Member member, Presence oldPresence) {
+        super(api, member);
         this.oldPresence = oldPresence;
     }
 

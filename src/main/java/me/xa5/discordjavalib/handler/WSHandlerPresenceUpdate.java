@@ -3,6 +3,7 @@ package me.xa5.discordjavalib.handler;
 import com.eclipsesource.json.JsonObject;
 import me.xa5.discordjavalib.WSClient;
 import me.xa5.discordjavalib.entities.DiscordApi;
+import me.xa5.discordjavalib.entities.Member;
 import me.xa5.discordjavalib.entities.Presence;
 import me.xa5.discordjavalib.entities.impl.GuildImpl;
 import me.xa5.discordjavalib.event.guild.member.EventPresenceUpdate;
@@ -23,7 +24,12 @@ public class WSHandlerPresenceUpdate extends WSEventHandler {
         GuildImpl guild = (GuildImpl) client.getApi().getGuild(data.get("guild_id").asString());
         Presence oldPresence = guild.getPresence(data.get("user").asObject().get("id").asString());
         Presence newPresence = JsonFactory.presenceFromJson(client.getApi(), data);
+        Member member = guild.getMember(newPresence.getUserId());
+        if (member == null) {
+            client.getApi().getLogger().trace("Received PRESENCE_UPDATE for unknown user, ignoring.");
+            return;
+        }
         guild.getPresenceMap().put(newPresence.getUserId(), newPresence);
-        getApi().dispatchEvent(new EventPresenceUpdate(getApi(), guild, oldPresence));
+        getApi().dispatchEvent(new EventPresenceUpdate(getApi(), member, oldPresence));
     }
 }
