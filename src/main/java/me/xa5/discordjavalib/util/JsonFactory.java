@@ -234,6 +234,10 @@ public class JsonFactory {
         return new AttachmentImpl(api, proxyUrl, fileName, url, id, size, height, width);
     }
 
+    public static ReactionImpl reactionFromJson(JsonObject data) {
+        return new ReactionImpl(data.get("animated").asBoolean(), data.get("name").asString(), data.get("id").isNull()? null:data.get("id").asString());
+    }
+
     public static JsonObject newPayload(int opCode, JsonObject data) {
         return Json.object()
                 .set("op", opCode)

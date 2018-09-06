@@ -25,6 +25,7 @@ import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleDelete;
 import me.xa5.discordjavalib.handler.guild.role.WSHandlerGuildRoleUpdate;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageCreate;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageDelete;
+import me.xa5.discordjavalib.handler.message.WSHandlerMessageReactionAdd;
 import me.xa5.discordjavalib.handler.message.WSHandlerMessageUpdate;
 import me.xa5.discordjavalib.util.JsonFactory;
 import okhttp3.Response;
@@ -57,19 +58,20 @@ public class WSClient {
         registerWSHandler(new WSHandlerChannelDelete(api));
         registerWSHandler(new WSHandlerChannelUpdate(api));
 
+        registerWSHandler(new WSHandlerTypingStart(api));
         registerWSHandler(new WSHandlerMessageDelete(api));
         registerWSHandler(new WSHandlerMessageCreate(api));
         registerWSHandler(new WSHandlerMessageUpdate(api));
-        registerWSHandler(new WSHandlerTypingStart(api));
+        registerWSHandler(new WSHandlerMessageReactionAdd(api));
 
         registerWSHandler(new WSHandlerGuildRoleCreate(api));
         registerWSHandler(new WSHandlerGuildRoleDelete(api));
         registerWSHandler(new WSHandlerGuildRoleUpdate(api));
 
+        registerWSHandler(new WSHandlerGuildMemberAdd(api));
         registerWSHandler(new WSHandlerGuildMembersChunk(api));
         registerWSHandler(new WSHandlerGuildMemberUpdate(api));
         registerWSHandler(new WSHandlerGuildMemberRemove(api));
-        registerWSHandler(new WSHandlerGuildMemberAdd(api));
 
         registerWSHandler(new WSHandlerGuildEmotesUpdate(api));
     }
