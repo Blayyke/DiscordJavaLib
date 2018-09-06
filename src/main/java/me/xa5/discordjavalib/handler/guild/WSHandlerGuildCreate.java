@@ -9,6 +9,7 @@ import me.xa5.discordjavalib.entities.Icon;
 import me.xa5.discordjavalib.entities.Presence;
 import me.xa5.discordjavalib.entities.impl.*;
 import me.xa5.discordjavalib.enums.*;
+import me.xa5.discordjavalib.event.guild.EventGuildCreate;
 import me.xa5.discordjavalib.handler.WSEventHandler;
 import me.xa5.discordjavalib.util.DJLUtil;
 import me.xa5.discordjavalib.util.JsonFactory;
@@ -113,5 +114,7 @@ public class WSHandlerGuildCreate extends WSEventHandler {
         });
 
         guild.setOwnerId(data.get("owner_id").asString());
+
+        client.getApi().dispatchEvent(new EventGuildCreate(getApi(), guild));
     }
 }
