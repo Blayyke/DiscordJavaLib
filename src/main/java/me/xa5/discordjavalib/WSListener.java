@@ -3,7 +3,9 @@ package me.xa5.discordjavalib;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.WriterConfig;
-import com.neovisionaries.ws.client.*;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketFrame;
 import me.xa5.discordjavalib.entities.DiscordApi;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -70,13 +72,14 @@ public class WSListener extends WebSocketAdapter {
             if (!object.get("t").isNull()) eventType = object.get("t").asString();
             if (object.get("s") != null && !object.get("s").isNull()) wsClient.setSequence(object.get("s").asLong());
 
-            JsonObject data = object.get("d").isNull() ? null : object.get("d").asObject();
 
             switch (op) {
-                case 0:
+                case 0: {
                     // EVENT
+                    JsonObject data = object.get("d").isNull() ? null : object.get("d").asObject();
                     wsClient.handleEvent(eventType, data);
                     break;
+                }
                 case 1:
                     wsClient.sendHeartbeat();
                     break;
@@ -86,10 +89,13 @@ public class WSListener extends WebSocketAdapter {
                 case 9:
                     // INVALIDATE
                     wsClient.getApi().invalidate();
-                case 10:
+                    break;
+                case 10: {
                     // HELLO!
+                    JsonObject data = object.get("d").asObject();
                     wsClient.onHello(data);
                     break;
+                }
                 case 11:
                     // HEARTBEAT ACKNOWLEDGED
                     wsClient.getApi().setPing(System.currentTimeMillis() - wsClient.heartbeatSendTime());
@@ -97,7 +103,7 @@ public class WSListener extends WebSocketAdapter {
                 default:
                     System.out.println("TEXT FRAME:: ");
                     System.out.println("op:: " + op);
-                    System.out.println("data:: " + data.toString(WriterConfig.PRETTY_PRINT));
+                    System.out.println("data:: " + message);
                     throw new RuntimeException("Unknown OpCode!");
             }
         } catch (Exception e) {
