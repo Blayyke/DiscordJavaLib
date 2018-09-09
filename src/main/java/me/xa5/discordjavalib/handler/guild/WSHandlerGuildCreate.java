@@ -29,7 +29,7 @@ public class WSHandlerGuildCreate extends WSEventHandler {
 
     @Override
     public void handle(WSClient client, JsonObject data) {
-        boolean unavailable = data.get("unavailable").asBoolean();
+        boolean unavailable = data.get("unavailable") != null && data.get("unavailable").asBoolean();
         String id = data.get("id").asString();
         GuildImpl guild = client.getApi().getOrCreateGuild(id, unavailable);
         guild.setUnavailable(unavailable);
