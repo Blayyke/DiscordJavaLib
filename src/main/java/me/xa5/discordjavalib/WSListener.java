@@ -74,7 +74,8 @@ public class WSListener extends WebSocketAdapter {
             if (object.get("s") != null && !object.get("s").isNull()) wsClient.setSequence(object.get("s").asLong());
 
             // Filter out events that we don't need
-            for (String ignoredEvent : ignoredEvents) if (eventType.equalsIgnoreCase(ignoredEvent)) return;
+            if (eventType != null)
+                for (String ignoredEvent : ignoredEvents) if (eventType.equalsIgnoreCase(ignoredEvent)) return;
 
 
             switch (op) {
