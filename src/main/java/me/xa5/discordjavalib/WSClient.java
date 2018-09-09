@@ -46,7 +46,6 @@ public class WSClient {
     private long heartbeatSendTime;
     private Map<String, WSEventHandler> eventHandlers = new HashMap<>();
     private String sessionId;
-    private String[] ignoredEvents = {"presences_replace"}; // discord sends this to bots for no apparent reason /shrug
 
     public WSClient(DiscordApiImpl api) {
         this.api = api;
@@ -114,9 +113,6 @@ public class WSClient {
 
     public void handleEvent(String eventType, JsonObject data) {
         api.getLogger().debug("Received WS event (" + eventType + ").");
-
-        // Filter out events that we don't need
-        for (String ignoredEvent : ignoredEvents) if (eventType.equalsIgnoreCase(ignoredEvent)) return;
 
         WSEventHandler wsEventHandler = eventHandlers.get(eventType.toLowerCase());
         if (wsEventHandler == null) {

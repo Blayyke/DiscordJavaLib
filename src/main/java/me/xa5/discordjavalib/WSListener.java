@@ -18,6 +18,7 @@ import java.util.zip.InflaterInputStream;
 public class WSListener extends WebSocketAdapter {
     private WSClient wsClient;
     private DiscordApi api;
+    private String[] ignoredEvents = {"presences_replace"}; // discord sends this to bots for no apparent reason /shrug
 
     WSListener(WSClient wsClient, DiscordApi api) {
         this.wsClient = wsClient;
@@ -71,6 +72,9 @@ public class WSListener extends WebSocketAdapter {
 
             if (!object.get("t").isNull()) eventType = object.get("t").asString();
             if (object.get("s") != null && !object.get("s").isNull()) wsClient.setSequence(object.get("s").asLong());
+
+            // Filter out events that we don't need
+            for (String ignoredEvent : ignoredEvents) if (eventType.equalsIgnoreCase(ignoredEvent)) return;
 
 
             switch (op) {
