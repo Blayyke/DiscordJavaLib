@@ -15,6 +15,7 @@ import me.xa5.discordjavalib.handler.channel.WSHandlerChannelCreate;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelDelete;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelUpdate;
 import me.xa5.discordjavalib.handler.guild.WSHandlerGuildCreate;
+import me.xa5.discordjavalib.handler.guild.WSHandlerGuildDelete;
 import me.xa5.discordjavalib.handler.guild.emotes.WSHandlerGuildEmotesUpdate;
 import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberAdd;
 import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberRemove;
@@ -51,8 +52,10 @@ public class WSClient {
         this.api = api;
 
         registerWSHandler(new WSHandlerReady(api));
-        registerWSHandler(new WSHandlerGuildCreate(api));
         registerWSHandler(new WSHandlerPresenceUpdate(api));
+
+        registerWSHandler(new WSHandlerGuildCreate(api));
+        registerWSHandler(new WSHandlerGuildDelete(api));
 
         registerWSHandler(new WSHandlerChannelCreate(api));
         registerWSHandler(new WSHandlerChannelDelete(api));
