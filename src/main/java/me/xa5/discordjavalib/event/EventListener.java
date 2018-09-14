@@ -1,5 +1,8 @@
 package me.xa5.discordjavalib.event;
 
+import me.xa5.discordjavalib.event.guild.EventGuildCreate;
+import me.xa5.discordjavalib.event.guild.EventGuildDelete;
+import me.xa5.discordjavalib.event.guild.EventGuildUpdate;
 import me.xa5.discordjavalib.event.guild.category.CategoryEvent;
 import me.xa5.discordjavalib.event.guild.category.EventChannelCategoryCreate;
 import me.xa5.discordjavalib.event.guild.category.EventChannelCategoryDelete;
@@ -17,9 +20,13 @@ import me.xa5.discordjavalib.event.guild.role.RoleEvent;
 
 public class EventListener {
     public final void onEvent(Event event) {
-        if (event instanceof ReadyEvent) onReady((ReadyEvent) event);
+        if (event instanceof EventReady) onReady((EventReady) event);
         if (event instanceof EventMemberUpdate) onMemberUpdate((EventMemberUpdate) event);
         if (event instanceof EventPresenceUpdate) onPresenceUpdate((EventPresenceUpdate) event);
+
+        if (event instanceof EventGuildCreate) onGuildCreate((EventGuildCreate) event);
+        if (event instanceof EventGuildDelete) onGuildDelete((EventGuildDelete) event);
+        if (event instanceof EventGuildUpdate) onGuildUpdate((EventGuildUpdate) event);
 
         if (event instanceof RoleEvent) onRoleEvent((RoleEvent) event);
         if (event instanceof EventRoleCreate) onRoleCreate((EventRoleCreate) event);
@@ -46,6 +53,15 @@ public class EventListener {
         if (event instanceof EventMessageCreate) onMessageCreate((EventMessageCreate) event);
         if (event instanceof EventMessageDelete) onMessageDelete((EventMessageDelete) event);
         if (event instanceof EventMessageUpdate) onMessageUpdate((EventMessageUpdate) event);
+    }
+
+    public void onGuildUpdate(EventGuildUpdate event) {
+    }
+
+    public void onGuildDelete(EventGuildDelete event) {
+    }
+
+    public void onGuildCreate(EventGuildCreate event) {
     }
 
     public void onVoiceChannelEvent(VoiceChannelEvent event) {
@@ -114,7 +130,7 @@ public class EventListener {
     public void onPresenceUpdate(EventPresenceUpdate event) {
     }
 
-    public void onReady(ReadyEvent event) {
+    public void onReady(EventReady event) {
     }
 
     public void onMemberUpdate(EventMemberUpdate event) {
