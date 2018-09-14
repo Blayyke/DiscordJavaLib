@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonObject;
 import me.xa5.discordjavalib.WSClient;
 import me.xa5.discordjavalib.entities.DiscordApi;
 import me.xa5.discordjavalib.entities.impl.GuildImpl;
+import me.xa5.discordjavalib.event.EventReady;
 import me.xa5.discordjavalib.util.JsonFactory;
 
 public class WSHandlerReady extends WSEventHandler {
@@ -32,5 +33,7 @@ public class WSHandlerReady extends WSEventHandler {
             GuildImpl guild = new GuildImpl(getApi(), guildObj.get("unavailable").asBoolean(), guildObj.get("id").asString());
             client.getApi().getGuildMap().put(guild.getId(), guild);
         }
+
+        getApi().dispatchEvent(new EventReady(getApi()));
     }
 }
