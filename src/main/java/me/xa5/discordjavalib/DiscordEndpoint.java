@@ -8,7 +8,8 @@ public class DiscordEndpoint {
     private String endpoint;
 
     // ENDPOINTS
-    public static DiscordEndpoint GET_GATEWAY = new DiscordEndpoint("/gateway", HttpMethod.GET);
+    public static final DiscordEndpoint GET_GATEWAY = new DiscordEndpoint("gateway", HttpMethod.GET);
+    public static final DiscordEndpoint SEND_MESSAGE = new DiscordEndpoint("channels/%s/messages", HttpMethod.POST);
     // END ENDPOINTS
 
     private DiscordEndpoint(String endpoint, HttpMethod httpMethod) {
@@ -20,7 +21,11 @@ public class DiscordEndpoint {
         return httpMethod;
     }
 
-    public String getUrl() {
-        return BASE_URL + "/" + endpoint;
+    public String getUrl(Object... formatting) {
+        return BASE_URL + "/" + format(formatting);
+    }
+
+    public String format(Object... objects) {
+        return String.format(endpoint, objects);
     }
 }

@@ -44,6 +44,10 @@ public class DiscordApiImpl implements DiscordApi {
         wsClient.connect();
     }
 
+    public WSClient getWsClient() {
+        return wsClient;
+    }
+
     public WebSocketFactory getWebSocketFactory() {
         return websocketFactory;
     }

@@ -16,6 +16,7 @@ import me.xa5.discordjavalib.handler.channel.WSHandlerChannelDelete;
 import me.xa5.discordjavalib.handler.channel.WSHandlerChannelUpdate;
 import me.xa5.discordjavalib.handler.guild.WSHandlerGuildCreate;
 import me.xa5.discordjavalib.handler.guild.WSHandlerGuildDelete;
+import me.xa5.discordjavalib.handler.guild.WSHandlerGuildUpdate;
 import me.xa5.discordjavalib.handler.guild.emotes.WSHandlerGuildEmotesUpdate;
 import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberAdd;
 import me.xa5.discordjavalib.handler.guild.member.WSHandlerGuildMemberRemove;
@@ -55,6 +56,7 @@ public class WSClient {
 
         registerWSHandler(new WSHandlerGuildCreate(api));
         registerWSHandler(new WSHandlerGuildDelete(api));
+        registerWSHandler(new WSHandlerGuildUpdate(api));
 
         registerWSHandler(new WSHandlerChannelCreate(api));
         registerWSHandler(new WSHandlerChannelDelete(api));
@@ -198,5 +200,9 @@ public class WSClient {
                 .add("guild_id", id)
                 .add("query", "")
                 .add("limit", 0)));
+    }
+
+    public DJLHttp getHttp() {
+        return http;
     }
 }

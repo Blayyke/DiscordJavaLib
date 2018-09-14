@@ -6,4 +6,8 @@ public interface TextChannel extends GuildChannel {
     String getLastMessageId();
 
     Guild getGuild();
+
+    void message(String text);
+
+    void message(Embed embed);
 }
